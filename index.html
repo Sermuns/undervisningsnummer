@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+  <title>Undervisningsnummer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  
+    
+    <form>
+      <label for="course">Enter text:</label>
+      <input type="text" name="course">
+      <button type="submit">Submit</button>
+    </form>
+
+    <sscanf variables='var.course' format="course=%s">&page.query;</sscanf>
+    &var.course;
+    <cgi script="cgi/FetchObjectId.cgi" query=&var.course;>
+
+  </body>  </html>
+

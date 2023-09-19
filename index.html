@@ -7,17 +7,20 @@
 </head>
 
 <body>
-  
-    
-    <form>
-      <label for="course">Enter text:</label>
-      <input type="text" name="course">
-      <button type="submit">Submit</button>
-    </form>
 
-    <sscanf variables='var.course' format="course=%s">&page.query;</sscanf>
-    &var.course;
+
+  <form>
+    <label for="course">Enter text:</label>
+    <input type="text" name="course">
+    <button type="submit">Submit</button>
+  </form>
+
+  <sscanf variables='var.course' format="course=%s">&page.query;</sscanf>
+  <if variable-exists="var.course">
+    <p>&var.course;</p>
     <cgi script="cgi/FetchObjectId.cgi" query=&var.course;>
+  </if>
 
-  </body>  </html>
+</body>
 
+</html>

@@ -3,27 +3,181 @@
 
 <head>
   <title>Undervisningsnummer</title>
+  <meta charset="UTF-8">
   <link rel="stylesheet" href="style.css">
   <link rel="apple-touch-icon" sizes="180x180" href="media/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="media/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="media/favicon-16x16.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <sscanf variables='var.course, var.group' format="course=%s&group=%s">&page.query;</sscanf>
 </head>
 
 <body>
+  <h1>
+    <a href=".">Undervisningsnummer</a>
+  </h1>
+  <p>
+    Sök efter en kurskod och studentgrupp för att få fram antalet undervisningstillfällen som har varit och som kommer att vara.
+  </p>
   <form>
-    <label for="course">Enter text:</label>
-    <input type="text" name="course">
-    <button type="submit">Submit</button>
+    <div>
+      <label for="course">Kurs:</label>
+      <input autofocus type="text" name="course" value="&var.course;"
+        onfocus="this.setSelectionRange(this.value.length, this.value.length)"
+        oninput="this.value = this.value.toUpperCase()">
+    </div>
+    <div>
+      <label for="group">Studentgrupp:</label>
+      <input type="text" name="group" value="&var.group;" oninput="this.value = this.value.toUpperCase()">
+    </div>
+    <button type="submit">Sök</button>
   </form>
 
-  <sscanf variables='var.course' format="course=%s">&page.query;</sscanf>
-  <if variable-exists=var.course>
-    <cgi script="cgi/FetchObjectIds.sh" course=&var.course;>
-  </if>
-  <else>
-    <div id="resultDiv">Enter a course code</div>
-  </else>
-  <script src="script.js"></script>
+  <div id="resultDiv">
+    <if variable-exists=var.course>
+      <cgi script="cgi/FetchObjectIds.sh" course=&var.course;>
+    </if>
+  </div>
+
+  <script>
+    // Get the div element with id="resultDiv"
+    const resultDiv = document.getElementById("resultDiv");
+
+    // Extract the value of the "group" parameter
+    const studentGroup = window.location.search.match(/group=([^&]*)/)[1];
+
+    // Define a function to check if the div has child nodes
+    function waitForChildren() {
+      const semesterUrlDiv = document.getElementById("semesterUrlDiv");
+      const futureUrlDiv = document.getElementById("futureUrlDiv");
+      if (semesterUrlDiv && futureUrlDiv) {
+        return true;
+      } else {
+        setTimeout(waitForChildren, 100); // Check again in 100 milliseconds
+      }
+    }
+    // Call the checkForChildNodes function to start checking for child nodes
+    waitForChildren();
+
+    // Urls will be in the children div of resultDiv
+    const nextOccurences = new Map();
+    const scheduleUrls = Array.from(resultDiv.children, child => child.textContent.replace(/\s+/g, ','));
+    const promises = scheduleUrls.map(url =>
+      fetch(url).then(response => response.text())
+    ) // Map the URLs to an array of fetch promises
+    Promise.all(promises).then(responseTexts => {
+      const parser = new DOMParser()
+      const documents = responseTexts.map(responseText =>
+        parser.parseFromString(responseText, 'text/html')
+      ) // Parse each response text into a Document object
+
+      /**
+       * Count the occcurences of <UndervisningsTyp> in the given elements
+       * for the given student group.
+       * e.g. 'Föreläsning' or 'Laboration'.
+       */
+      function getActivityCountMap(tableRowElements, inputGroup) {
+        const countMap = new Map()
+        /**
+         * Increment the count of the given activity
+         */
+        function incrementActivity(activity) {
+          countMap.set(activity, countMap.get(activity) + 1 || 1)
+        }
+        for (const tr of tableRowElements) {
+          const teachingActivity = tr.children[3].textContent.trim()
+          if (!teachingActivity.trim()) {
+            // Skip if the activity is empty
+            continue
+          }
+          if (inputGroup) {
+            const studentGroupElement = tr.children[7]
+            var studentGroupsInRow = studentGroupElement.textContent
+              .trim()
+              .split(' ')
+            studentGroupsInRow[0] = studentGroupsInRow[0].toUpperCase()
+            const exactMatch = studentGroupsInRow.includes(inputGroup)
+            const searchedSuperStudentGroup = inputGroup
+              .trim()
+              .split('.')[0]
+              .toUpperCase()
+            const superGroupMatch = studentGroupsInRow.includes(
+              searchedSuperStudentGroup
+            )
+            if (exactMatch || superGroupMatch) {
+              incrementActivity(teachingActivity)
+            }
+          } else {
+            incrementActivity(teachingActivity)
+          }
+        }
+        return countMap
+      }
+
+      const semesterCountMap =
+        getActivityCountMap(
+          documents[0].querySelectorAll('tr.rr.clickable2'),
+          studentGroup
+        )
+
+      const futureTrs = documents[1].querySelectorAll('tr.rr.clickable2')
+      // get the first date
+      for (const tr of futureTrs) {
+        const activity = tr.children[3].textContent.trim()
+        const isFirstOccurence = !nextOccurences.has(activity)
+        if (isFirstOccurence) {
+          let prevSibling = tr.previousElementSibling
+          while (
+            prevSibling &&
+            prevSibling.classList.contains('clickable2')
+          ) {
+            prevSibling = prevSibling.previousElementSibling
+          }
+          const time = tr.children[1].textContent.trim()
+          const date = prevSibling
+            ? prevSibling.children[1].textContent.trim() + ',' + time + ''
+            : ''
+          nextOccurences.set(activity, date)
+        }
+      }
+
+      const futureCountMap = getActivityCountMap(futureTrs, studentGroup);
+
+      // Create a table element
+      const table = document.createElement('table');
+      const headersRow = document.createElement('tr');
+      headersRow.innerHTML = '<th>Aktivitet</th><th>Tidigare/Totalt</th><th>Nästa</th>';
+      table.appendChild(headersRow);
+
+      // Loop through the futureCountMap and add a row for each key-value pair
+      for (const [course, semesterCount] of semesterCountMap) {
+        // Create a row element
+        const row = document.createElement('tr');
+
+        // Create a cell element for the key
+        const keyCell = document.createElement('td');
+        keyCell.textContent = course;
+        row.appendChild(keyCell);
+
+        // Create a cell element for the value
+        const valueCell = document.createElement('td');
+        const previousCount = semesterCount - futureCountMap.get(course) || 0;
+        valueCell.textContent = previousCount + "/" + semesterCount;
+        row.appendChild(valueCell);
+
+        const nextCell = document.createElement('td');
+        nextCell.textContent = nextOccurences.get(course) || '';
+        row.appendChild(nextCell);
+
+        // Add the row to the table
+        table.appendChild(row);
+      }
+
+      // Add the table to the resultDiv
+      resultDiv.appendChild(table);
+    })
+
+  </script>
 
 </body>
 

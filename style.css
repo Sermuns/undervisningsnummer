@@ -1,20 +1,77 @@
 body {
-    font-family: "Lucida Console", Courier, monospace;
-    margin: 2rem auto;
-    max-width: 45rem;
-    min-width:fit-content;
     border: 1px solid #ccc;
     background: #f3f3f3;
-}
-
-div, body{
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 1rem;
+}
+
+* {
+    font-family: "Lucida Console", Courier, monospace;
+}
+
+a{
+    text-decoration: underline;
+    color: black;
+}
+
+h1{
+    text-align: center;
+    margin: 0;
+}
+
+p{
+    text-align: center;
+    border: #ccc 1px solid;
+    padding: 1rem;
+    max-width:70%;
+}
+
+p.error{
+    color: purple;
+    text-decoration: underline;
+}
+
+div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+button {
+    margin: 1rem 0;
+    padding: 0.5rem;
+    width: 100%;
+}
+
+table {
+    min-width: 60%;
+    max-width: 80%;
+}
+
+td {
+    padding: 2rem;
     border: 1px solid #ccc;
 }
 
-body > *{
-    margin-bottom: 1rem;
+tr:hover {
+    background: #ddd;
+}
+
+input {
+    font-size: larger;
+}
+
+label {
+    margin-top: 1rem;
+    font-weight: bold;
+    font-size: larger;
+}
+
+/* Could turned into a toggleable thing */
+#semesterUrlDiv,
+#futureUrlDiv {
+    display: none;
 }

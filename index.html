@@ -7,8 +7,6 @@
 </head>
 
 <body>
-
-
   <form>
     <label for="course">Enter text:</label>
     <input type="text" name="course">
@@ -16,10 +14,12 @@
   </form>
 
   <sscanf variables='var.course' format="course=%s">&page.query;</sscanf>
-  <if variable-exists="var.course">
-    <p>&var.course;</p>
-    <cgi script="cgi/FetchObjectId.cgi" query=&var.course;>
+  <if variable="var.course=">
+    <cgi script="cgi/FetchObjectIds.sh" course=&var.course;>
   </if>
+  <else>
+    <p>Enter a course code</p>
+  </else>
 
 </body>
 

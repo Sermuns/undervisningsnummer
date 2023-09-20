@@ -22,6 +22,7 @@ h1{
 }
 
 p{
+    margin: 0;
     text-align: center;
     border: #ccc 1px solid;
     padding: 1rem;
@@ -46,13 +47,13 @@ button {
     width: 100%;
 }
 
-table {
+table,p{
     min-width: 60%;
     max-width: 80%;
 }
 
-td {
-    padding: 2rem;
+td,th {
+    padding: 0.2rem 1rem;
     border: 1px solid #ccc;
 }
 

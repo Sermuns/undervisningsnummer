@@ -17,7 +17,8 @@
     <a href=".">Undervisningsnummer</a>
   </h1>
   <p>
-    Sök efter en kurskod och studentgrupp för att få fram antalet undervisningstillfällen som har varit och som kommer att vara.
+    Sök efter en kurskod och studentgrupp för att få fram antalet undervisningstillfällen som har varit och som kommer
+    att vara.
   </p>
   <form>
     <div>
@@ -133,10 +134,10 @@
           ) {
             prevSibling = prevSibling.previousElementSibling
           }
-          const time = tr.children[1].textContent.trim()
-          const date = prevSibling
-            ? prevSibling.children[1].textContent.trim() + ',' + time + ''
-            : ''
+          const time = tr.children[1].textContent.trim().replace(/\s+/g, '');
+          const day = prevSibling.children[1].textContent.trim().split(' ').slice(0, 2).join(' ')
+          const date = prevSibling ? day + ', ' + time + '' : ''
+
           nextOccurences.set(activity, date)
         }
       }

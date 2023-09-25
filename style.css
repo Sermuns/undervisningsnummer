@@ -1,91 +1,107 @@
+* {
+    font-family: "Lucida Console", Courier, monospace;
+}
+
 body {
+    display: flex;
+    justify-content: center;
+}
+
+#app {
     border: 1px solid #ccc;
     background: #f3f3f3;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1rem;
+    width: 60rem;
+    padding: 0.5rem;
 }
 
-* {
-    font-family: "Lucida Console", Courier, monospace;
-}
-
-a{
+h1>a {
     text-decoration: underline;
     color: black;
 }
 
-
-h1{
+h1 {
     text-align: center;
-    font-size: 1.8rem;
-    max-width: 50%;
-    margin: 0;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
 }
 
-p{
-    margin: 0;
+.information {
     text-align: center;
     border: #ccc 1px solid;
+    margin-top: 0;
     padding: 1rem;
-    max-width:70%;
+    max-width: 70%;
 }
 
-p.error{
+.contact{
+    border: #ccc  1px solid;
+    padding: 0.5rem;
+}
+
+p.error {
     color: purple;
     text-decoration: underline;
 }
 
-div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+#resultDiv {
+    width: 100%;
+    overflow: auto;
 }
 
-button,input{
-    padding: 0.2rem 0.2rem;
+#resultTable {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-table,p{
-    min-width: 60%;
-    max-width: 80%;
+#resultTable>tr>th {
+    border: 2px solid #ccc;
+    padding: 0.5rem;
 }
 
-#resultTable > tr > td,th {
-    padding: 0.3rem 1rem;
+#resultTable>tr>td {
+    padding: 1rem 1rem;
     border: 1px solid #ccc;
 }
 
 tr:hover {
-    background: #ddd;
+    background: #cecece;
 }
 
-
-form{
-    width:60%;
-    display:grid;
-    grid-template-columns: auto 1fr;
+form {
+    max-width: 70%;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
 }
 
-form > *{
-    margin: 0.5rem;
+form>* {
+    padding: 0.2rem;
+    margin: 0.5rem 0;
 }
 
 label {
     font-weight: bold;
 }
 
-.hidden{
+.hidden {
     display: none;
 }
 
-#urlButton{
-    width: 20%;
+#semesterUrlDiv,
+#futureUrlDiv {
+    max-width: 40rem;
     margin: 1rem;
 }
 
-#form{
-    margin: 2rem;
-    max-width:10rem;
+#urlButton {
+    margin-top: 5rem;
+    max-width: 50%;
+}
+
+footer{
+    border: #ccc 1px solid;
+    margin-top: 1rem;
+    text-align: center;
 }

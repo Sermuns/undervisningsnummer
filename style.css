@@ -16,8 +16,11 @@ a{
     color: black;
 }
 
+
 h1{
     text-align: center;
+    font-size: 1.8rem;
+    max-width: 50%;
     margin: 0;
 }
 
@@ -38,13 +41,10 @@ div {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
 }
 
-button {
-    margin: 1rem 0;
-    padding: 0.5rem;
-    width: 100%;
+button,input{
+    padding: 0.2rem 0.2rem;
 }
 
 table,p{
@@ -52,8 +52,8 @@ table,p{
     max-width: 80%;
 }
 
-td,th {
-    padding: 0.2rem 1rem;
+#resultTable > tr > td,th {
+    padding: 0.3rem 1rem;
     border: 1px solid #ccc;
 }
 
@@ -61,18 +61,31 @@ tr:hover {
     background: #ddd;
 }
 
-input {
-    font-size: larger;
+
+form{
+    width:60%;
+    display:grid;
+    grid-template-columns: auto 1fr;
+}
+
+form > *{
+    margin: 0.5rem;
 }
 
 label {
-    margin-top: 1rem;
     font-weight: bold;
-    font-size: larger;
 }
 
-/* Could turned into a toggleable thing */
-#semesterUrlDiv,
-#futureUrlDiv {
+.hidden{
     display: none;
+}
+
+#urlButton{
+    width: 20%;
+    margin: 1rem;
+}
+
+#form{
+    margin: 2rem;
+    max-width:10rem;
 }

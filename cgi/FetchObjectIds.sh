@@ -25,5 +25,5 @@ futureUrl="https://cloud.timeedit.net/liu/web/schema/ri.html?h=t&sid=3&p=0.d%2C2
 
 echo "Content-type: text/html"
 echo
-echo "<div id="semesterUrlDiv">$semesterUrl</div>"
-echo "<div id="futureUrlDiv">$futureUrl</div>"
+echo "<div class="hidden" id="semesterUrlDiv"><a href=\"$semesterUrl\">$semesterUrl</a></div>"
+echo "<div class="hidden" id="futureUrlDiv"><a href=\"$futureUrl\">$futureUrl</a></div>"

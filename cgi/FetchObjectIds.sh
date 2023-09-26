@@ -18,12 +18,17 @@ baseUrl="https://cloud.timeedit.net/liu/web/schema"
 jsonUrl="$baseUrl/objects.json?l=sv_SE&search_text=${course}&types=219&fe=132.0&sid=3&ox=0"
 
 # Use curl to fetch the JSON data containing object ids for coursename
-objectIds=$(curl -s "$jsonUrl" | jq -r '.records[].identVirtual')
+objectIds=($(curl -s "$jsonUrl" | jq -r '.records[].identVirtual'))
 
-semesterUrl="https://cloud.timeedit.net/liu/web/schema/ri.html?h=t&sid=3&p=20230801%2C20231231&objects=$(IFS=,; echo "${objectIds[*]}")&ox=0&types=0"
-futureUrl="https://cloud.timeedit.net/liu/web/schema/ri.html?h=t&sid=3&p=0.d%2C20231231.x&objects=$(IFS=,; echo "${objectIds[*]}")&ox=0&types=0"
+# Join the array elements with a delimiter
+IFS=,
+objectIdString="${objectIds[*]}"
+
+ # Set the IFS variable to a space character
+semesterUrl="https://cloud.timeedit.net/liu/web/schema/ri.html?h=t&sid=3&p=20230801%2C20231231&objects=${objectIdString}"
+futureUrl="https://cloud.timeedit.net/liu/web/schema/ri.html?h=t&sid=3&p=0.d%2C20231231.x&objects=${objectIdString}"
 
 echo "Content-type: text/html"
 echo
-echo "<div class="hidden" id="semesterUrlDiv"><a href=\"$semesterUrl\">$semesterUrl</a></div>"
-echo "<div class="hidden" id="futureUrlDiv"><a href=\"$futureUrl\">$futureUrl</a></div>"
+echo "<div class="hidden" id="semesterUrlDiv"><pre><a href=\"$semesterUrl\">$semesterUrl</a></pre></div>"
+echo "<div class="hidden" id="futureUrlDiv"><pre><a href=\"$futureUrl\">$futureUrl</a></pre></div>"

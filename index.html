@@ -102,19 +102,22 @@
 
           let previousTr = null;
           for (const tr of tableRowElements) {
-            const teachingActivity = tr.children[3].textContent.trim();
-            if (!teachingActivity) {
+            const activity = tr.children[3].textContent.trim();
+            if (!activity) {
               // Skip if the activity is empty
               continue;
             }
-            const previousActivity = previousTr ? previousTr.children[3].textContent.trim() : '';
-            const currentTime = tr.children[1].textContent.trim();
-            const previousTime = previousTr ? previousTr.children[1].textContent.trim() : '';
-            // Skip if the activity and time are the same as the previous row, overlap
-            if (currentTime === previousTime && teachingActivity === previousActivity) {
-              continue;
-            }
-            if (inputGroup) {
+            if (!inputGroup) {
+              incrementActivity(activity);
+            } else {
+              const previousActivity = previousTr ? previousTr.children[3].textContent.trim() : '';
+              const currentTime = tr.children[1].textContent.trim();
+              const previousTime = previousTr ? previousTr.children[1].textContent.trim() : '';
+              const sameDay = tr.previousElementSibling === previousTr;
+              // Skip if the activity and time are the same as the previous row, overlap
+              if (sameDay && currentTime === previousTime && activity === previousActivity) {
+                continue;
+              }
               const studentGroupElement = tr.children[7];
               const studentGroupsInRow = studentGroupElement.textContent
                 .toUpperCase()
@@ -126,10 +129,8 @@
                 .split('.')[0];
               const superGroupMatch = studentGroupsInRow.includes(searchedSuperStudentGroup);
               if (exactMatch || superGroupMatch) {
-                incrementActivity(teachingActivity);
+                incrementActivity(activity);
               }
-            } else {
-              incrementActivity(teachingActivity);
             }
             previousTr = tr;
           }

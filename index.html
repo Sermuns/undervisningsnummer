@@ -54,7 +54,7 @@
     const resultDiv = document.getElementById("resultDiv");
 
     // Extract the value of the "group" parameter
-    const studentGroup = window.location.search.match(/group=([^&]*)/)[1];
+    const studentGroup = window.location.search.match(/group=([^&]*)/)[1].toUpperCase();
 
     // Wait for urls to be added to the DOM
     function waitForChildren() {
@@ -107,28 +107,28 @@
               // Skip if the activity is empty
               continue;
             }
+            const previousActivity = previousTr ? previousTr.children[3].textContent.trim() : '';
+            const currentTime = tr.children[1].textContent.trim();
+            const previousTime = previousTr ? previousTr.children[1].textContent.trim() : '';
+            // Skip if the activity and time are the same as the previous row, overlap
+            if (currentTime === previousTime && teachingActivity === previousActivity) {
+              continue;
+            }
             if (inputGroup) {
               const studentGroupElement = tr.children[7];
               const studentGroupsInRow = studentGroupElement.textContent
+                .toUpperCase()
                 .trim()
                 .split(' ');
-              const exactMatch = studentGroupsInRow.includes(inputGroup.toUpperCase());
+              const exactMatch = studentGroupsInRow.includes(inputGroup);
               const searchedSuperStudentGroup = inputGroup
                 .trim()
-                .split('.')[0]
-                .toUpperCase();
+                .split('.')[0];
               const superGroupMatch = studentGroupsInRow.includes(searchedSuperStudentGroup);
               if (exactMatch || superGroupMatch) {
                 incrementActivity(teachingActivity);
               }
             } else {
-              const previousActivity = previousTr ? previousTr.children[3].textContent.trim() : '';
-              const currentTime = tr.children[1].textContent.trim();
-              const previousTime = previousTr ? previousTr.children[1].textContent.trim() : '';
-              // Skip if the activity and time are the same as the previous row, overlap
-              if (currentTime === previousTime && teachingActivity === previousActivity) {
-                continue;
-              }
               incrementActivity(teachingActivity);
             }
             previousTr = tr;

@@ -17,13 +17,11 @@
     <h1>
       <a href=".">Undervisningsnummer</a>
     </h1>
-    <if not variable-exists=var.course>
-      <p class="information">
-        Sök efter en kurskod och studentgrupp för att få fram antalet undervisningstillfällen som har varit och som
-        kommer
-        att vara.
-      </p>
-    </if>
+    <p class="information">
+      Sök efter en kurskod och studentgrupp för att få fram antalet undervisningstillfällen som har varit och som
+      kommer
+      att vara.
+    </p>
     <form>
       <label for="course">Kurs:</label>
       <input autofocus type="text" name="course" value="&var.course;"

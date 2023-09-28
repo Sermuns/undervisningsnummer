@@ -20,10 +20,11 @@ function makeTable () {
 
   // Extract the value of the "group" parameter
   const urlQueries = window.location.search.match(/group=([^&]*)/)
-  if(!urlQueries){
+  // If the group parameter is not present, return
+  if (!urlQueries) {
     return
   }
-  const studentGroup =  urlQueries[1].toUpperCase()
+  const studentGroup = urlQueries[1].toUpperCase()
 
   // Urls will be in the children div of resultDiv
   const nextOccurences = new Map()
@@ -143,38 +144,37 @@ function getActivityCountMap (tableRowElements, inputGroup) {
 
   let previousTr = null
   for (const tr of tableRowElements) {
-    const activity = tr.children[3].textContent.trim()
-    if (!activity) {
-      // Skip if the activity is empty
+    const currentActivity = tr.children[3].textContent.trim()
+    // Skip empty rows
+    if (!currentActivity) {
       continue
     }
-    const previousGroup = previousTr ? previousTr.children[7].textContent : ''
+    // Skip rows that don't contain the given group
+    if (inputGroup && !getIfContainsGroup(tr, inputGroup)) {
+      continue
+    }
+
+    const previousGroup = previousTr?.children[7]?.textContent ?? ''
     const currentGroup = tr.children[7].textContent
     const sameGroup = currentGroup === previousGroup
-    const previousActivity = previousTr
-      ? previousTr.children[3].textContent.trim()
-      : ''
+
+    const previousActivity = previousTr?.children[3]?.textContent.trim() ?? ''
     const currentTime = tr.children[1].textContent.trim()
-    const previousTime = previousTr
-      ? previousTr.children[1].textContent.trim()
-      : ''
+    const previousTime = previousTr?.children[1]?.textContent.trim() ?? ''
     const sameDay = tr.previousElementSibling === previousTr
-    // Skip if the activity and time are the same as the previous row, overlap
+
+    // Skip overlapping activites when group is defined
     if (
+      inputGroup &&
       sameDay &&
       currentTime === previousTime &&
-      activity === previousActivity &&
+      currentActivity === previousActivity &&
       sameGroup
     ) {
       continue
     }
-    if (!inputGroup) {
-      incrementActivity(activity)
-    } else {
-      if (getIfContainsGroup(tr, inputGroup)) {
-        incrementActivity(activity)
-      }
-    }
+
+    incrementActivity(currentActivity)
     previousTr = tr
   }
 

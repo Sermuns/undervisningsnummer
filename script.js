@@ -5,11 +5,6 @@ function makeTable () {
   // Get the div element with id="resultDiv"
   const resultDiv = document.getElementById('resultDiv')
 
-  // Extract the value of the "group" parameter
-  const studentGroup = window.location.search
-    .match(/group=([^&]*)/)[1]
-    .toUpperCase()
-
   // Wait for urls to be added to the DOM
   function waitForChildren () {
     const semesterUrlDiv = document.getElementById('semesterUrlDiv')
@@ -22,6 +17,13 @@ function makeTable () {
   }
   // Call the checkForChildNodes function to start checking for child nodes
   waitForChildren()
+
+  // Extract the value of the "group" parameter
+  const urlQueries = window.location.search.match(/group=([^&]*)/)
+  if(!urlQueries){
+    return
+  }
+  const studentGroup =  urlQueries[1].toUpperCase()
 
   // Urls will be in the children div of resultDiv
   const nextOccurences = new Map()

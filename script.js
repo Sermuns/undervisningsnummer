@@ -229,7 +229,7 @@ function storeHistory (courseInput, groupInput) {
   // Store only the three latest searches in localStorage
   localStorage.setItem(
     'searchHistory',
-    JSON.stringify(searchHistory.slice(0, 3))
+    JSON.stringify(searchHistory.slice(0, 5))
   )
 }
 

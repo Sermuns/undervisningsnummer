@@ -57,14 +57,20 @@ p.error {
     border-collapse: collapse;
 }
 
+#resultTable>tr{
+    height: 1rem;
+}
+
 #resultTable>tr>th {
     border: 2px solid #ccc;
-    padding: 0.5rem;
 }
 
 #resultTable>tr>td {
-    padding: 0.2rem 1rem;
     border: 1px solid #ccc;
+}
+
+#resultTable>tr>*{
+    padding: 1rem;
 }
 
 tr:hover {
@@ -102,6 +108,8 @@ label {
 }
 
 footer{
+    vertical-align: center;
+    padding: 0.5rem;
     border: #ccc 1px solid;
     margin-top: 1rem;
     text-align: center;

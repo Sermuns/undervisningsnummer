@@ -98,7 +98,7 @@ function makeTable () {
       row.appendChild(valueCell)
 
       const nextCell = document.createElement('td')
-      nextCell.textContent = nextOccurences.get(course) || ''
+      nextCell.innerHTML = nextOccurences.get(course) || '-'
       row.appendChild(nextCell)
 
       // Add the row to the table

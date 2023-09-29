@@ -49,6 +49,11 @@ function makeTable () {
       studentGroup
     )
 
+    // No results!
+    if (semesterCountMap.size === 0) {
+      return
+    }
+
     const futureTrs = documents[1].querySelectorAll('tr.rr.clickable2')
     // get the first date
     for (const tr of futureTrs) {
@@ -187,4 +192,57 @@ function getActivityCountMap (tableRowElements, inputGroup) {
 function toggleUrls () {
   document.getElementById('semesterUrlDiv').classList.toggle('hidden')
   document.getElementById('futureUrlDiv').classList.toggle('hidden')
+}
+
+function storeHistory (courseInput, groupInput) {
+  const searchHistory = JSON.parse(
+    localStorage.getItem('searchHistory') || '[]'
+  )
+
+  // Add the current search to the search history
+  const currentSearch = {
+    course: courseInput.value.toUpperCase(),
+    group: groupInput.value.toUpperCase()
+  }
+
+  // Check if the current search already exists in the history
+  const alreadyExists = searchHistory.some(
+    search =>
+      search.course === currentSearch.course &&
+      search.group === currentSearch.group
+  )
+
+  // If no results were found, don't add the search to the history
+  const table = document.querySelector('#resultDiv > table')
+
+  if (alreadyExists || !table) {
+    return
+  }
+
+  searchHistory.unshift(currentSearch)
+
+  // Store only the three latest searches in localStorage
+  localStorage.setItem(
+    'searchHistory',
+    JSON.stringify(searchHistory.slice(0, 3))
+  )
+}
+
+function showHistory (courseInput, groupInput) {
+  const searchHistory = JSON.parse(
+    localStorage.getItem('searchHistory') || '[]'
+  )
+  const suggestionsDiv = document.getElementById('suggestions')
+  suggestionsDiv.innerHTML = ''
+  searchHistory.forEach((search, index) => {
+    const suggestion = document.createElement('a')
+    const groupText = search.group ? `(${search.group})` : ''
+    suggestion.textContent = `${search.course}` + groupText
+    suggestion.style.cursor = 'pointer' // add pointer cursor on hover
+    suggestion.addEventListener('click', () => {
+      courseInput.value = search.course
+      groupInput.value = search.group
+    })
+    suggestionsDiv.appendChild(suggestion)
+  })
 }

@@ -29,7 +29,9 @@
         oninput="this.value = this.value.toUpperCase()" placeholder="BML402, TATB01, TMES24">
       <label for="group">Grupp:</label>
       <input type="text" name="group" value="&var.group;" oninput="this.value = this.value.toUpperCase()"
-        placeholder="BASL, EMM1.B, D2.C">
+        placeholder="BASL1, EMM1.B, D2.C">
+      <label for="suggestions">Historik:</label>
+      <div id="suggestions" style="grid-column: 2/3;"></div>
       <button type="submit" style="grid-column: 1/3;">Sök!</button>
     </form>
 
@@ -47,9 +49,16 @@
   </div>
 
   <script>
-    window.onload = function() {
+    document.addEventListener('DOMContentLoaded', () => {
       makeTable();
-    }
+      courseInput = document.querySelector('input[name="course"]');
+      groupInput = document.querySelector('input[name="group"]');
+      showHistory(courseInput, groupInput);
+      setTimeout(() => {
+        storeHistory(courseInput, groupInput);
+        showHistory(courseInput, groupInput);
+      }, 600);
+    });
   </script>
 
 

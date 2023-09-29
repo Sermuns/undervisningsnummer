@@ -18,14 +18,14 @@ body {
     overflow: auto;
 }
 
-h1>a {
+a {
     text-decoration: underline;
     color: black;
 }
 
 h1 {
-    text-align: center;
     font-size: 1.5rem;
+    text-align: center;
     margin-bottom: 0.5rem;
 }
 
@@ -34,12 +34,27 @@ h1 {
     border: #ccc 1px solid;
     margin-top: 0;
     padding: 1rem;
-    max-width: 70%;
 }
 
-.contact{
-    border: #ccc  1px solid;
-    padding: 0.5rem;
+form {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-gap: 0.5rem;
+}
+
+form>* {
+    padding: 0.2rem;
+}
+
+label {
+    font-weight: bold;
+}
+
+#suggestions{
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
 }
 
 p.error {
@@ -75,21 +90,6 @@ p.error {
 
 tr:hover {
     background: #cecece;
-}
-
-form {
-    max-width: 70%;
-    display: grid;
-    grid-template-columns: 1fr 4fr;
-}
-
-form>* {
-    padding: 0.2rem;
-    margin: 0.5rem 0;
-}
-
-label {
-    font-weight: bold;
 }
 
 .hidden {

@@ -58,7 +58,7 @@ p.error {
 }
 
 #resultTable>tr{
-    height: 1rem;
+    height: 3rem;
 }
 
 #resultTable>tr>th {
@@ -70,7 +70,7 @@ p.error {
 }
 
 #resultTable>tr>*{
-    padding: 1rem;
+    padding: 0.5rem;
 }
 
 tr:hover {

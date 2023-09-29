@@ -195,6 +195,13 @@ function toggleUrls () {
 }
 
 function storeHistory (courseInput, groupInput) {
+  // If no results were found, don't add the search to the history
+  const table = document.querySelector('#resultDiv > table')
+
+  if (!table) {
+    return
+  }
+
   const searchHistory = JSON.parse(
     localStorage.getItem('searchHistory') || '[]'
   )
@@ -206,17 +213,15 @@ function storeHistory (courseInput, groupInput) {
   }
 
   // Check if the current search already exists in the history
-  const alreadyExists = searchHistory.some(
+  const alreadyExistsIndex = searchHistory.findIndex(
     search =>
       search.course === currentSearch.course &&
       search.group === currentSearch.group
   )
 
-  // If no results were found, don't add the search to the history
-  const table = document.querySelector('#resultDiv > table')
-
-  if (alreadyExists || !table) {
-    return
+  // If the search already exists, remove it from the history
+  if (alreadyExistsIndex !== -1) {
+    searchHistory.splice(alreadyExistsIndex, 1)
   }
 
   searchHistory.unshift(currentSearch)
@@ -232,17 +237,17 @@ function showHistory (courseInput, groupInput) {
   const searchHistory = JSON.parse(
     localStorage.getItem('searchHistory') || '[]'
   )
-  const suggestionsDiv = document.getElementById('suggestions')
-  suggestionsDiv.innerHTML = ''
+  const historyDiv = document.getElementById('history')
+  historyDiv.innerHTML = ''
   searchHistory.forEach((search, index) => {
-    const suggestion = document.createElement('a')
+    const history = document.createElement('a')
     const groupText = search.group ? `(${search.group})` : ''
-    suggestion.textContent = `${search.course}` + groupText
-    suggestion.style.cursor = 'pointer' // add pointer cursor on hover
-    suggestion.addEventListener('click', () => {
+    history.textContent = `${search.course}` + groupText
+    history.style.cursor = 'pointer' // add pointer cursor on hover
+    history.addEventListener('click', () => {
       courseInput.value = search.course
       groupInput.value = search.group
     })
-    suggestionsDiv.appendChild(suggestion)
+    historyDiv.appendChild(history)
   })
 }

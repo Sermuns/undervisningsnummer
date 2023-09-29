@@ -3,10 +3,11 @@
 
 <head>
   <title>Undervisningsnummer</title>
-  <link rel="stylesheet" href="style.css">
   <link rel="apple-touch-icon" sizes="180x180" href="media/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="media/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="media/favicon-16x16.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="darkmode.css" media="(prefers-color-scheme: dark)">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <sscanf variables='var.course, var.group' format="course=%s&group=%s">&page.query;</sscanf>
   <script src="script.js"></script>
@@ -26,12 +27,12 @@
       <label for="course">Kurs:</label>
       <input autofocus type="text" name="course" value="&var.course;"
         onfocus="this.setSelectionRange(this.value.length, this.value.length)"
-        oninput="this.value = this.value.toUpperCase()" placeholder="BML402, TATB01, TMES24">
+        oninput="this.value = this.value.toUpperCase()" placeholder="Ex: TATA24">
       <label for="group">Grupp:</label>
       <input type="text" name="group" value="&var.group;" oninput="this.value = this.value.toUpperCase()"
-        placeholder="BASL1, EMM1.B, D2.C">
-      <label for="suggestions">Historik:</label>
-      <div id="suggestions" style="grid-column: 2/3;"></div>
+        placeholder="Ex: D2.C">
+      <label for="history">Historik:</label>
+      <div id="history" style="grid-column: 2/3;"></div>
       <button type="submit" style="grid-column: 1/3;">Sök!</button>
     </form>
 
@@ -51,13 +52,18 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       makeTable();
-      courseInput = document.querySelector('input[name="course"]');
-      groupInput = document.querySelector('input[name="group"]');
+      const courseInput = document.querySelector('input[name="course"]');
+      const groupInput = document.querySelector('input[name="group"]');
       showHistory(courseInput, groupInput);
-      setTimeout(() => {
-        storeHistory(courseInput, groupInput);
-        showHistory(courseInput, groupInput);
-      }, 600);
+      const resultDiv = document.querySelector('#resultDiv');
+      const observer = new MutationObserver((mutations) => {
+        if (resultDiv.children.length > 2) {
+          storeHistory(courseInput, groupInput);
+          showHistory(courseInput, groupInput);
+          observer.disconnect();
+        }
+      });
+      observer.observe(resultDiv, { childList: true });
     });
   </script>
 

@@ -59,7 +59,7 @@ label {
   gap: 0.5rem;
 }
 
-/* To disable ugly */
+/* Make sure the caret is visible only in the input fields */
 p,
 label,
 button,

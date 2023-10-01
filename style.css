@@ -59,6 +59,11 @@ label {
     gap: 0.5rem;
 }
 
+/* To disable ugly */
+p, label, button, footer, a{
+    caret-color: transparent;
+}
+
 p.error {
     color: purple;
     text-decoration: underline;

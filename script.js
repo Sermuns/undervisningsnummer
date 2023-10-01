@@ -238,6 +238,11 @@ function showHistory (courseInput, groupInput) {
     localStorage.getItem('searchHistory') || '[]'
   )
   const historyDiv = document.getElementById('history')
+  if(searchHistory.length === 0){
+    const historyLabel = document.querySelector('label[for="history"]')
+    historyLabel.style.display = 'none'
+    historyDiv.style.display = 'none'
+  }
   historyDiv.innerHTML = ''
   searchHistory.forEach((search, index) => {
     const history = document.createElement('a')

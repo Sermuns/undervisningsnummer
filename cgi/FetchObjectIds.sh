@@ -8,7 +8,7 @@ course="$VAR_course"
 if [ ${#course} -lt 5 ]; then
     echo "Content-type: text/html; charset=utf-8"
     echo
-    echo "<p class="error">FEL: Kurskod måste bestå av minst 4 karaktärer!</p>"
+    echo "<p class="error">Kurskod måste bestå av minst 4 karaktärer!</p>"
     exit 1
 fi
 
@@ -23,6 +23,14 @@ objectIds=($(curl -s "$jsonUrl" | jq -r '.records[].identVirtual'))
 # Join the array elements with a delimiter
 IFS=,
 objectIdString="${objectIds[*]}"
+
+# If the string is empty, no matches were found
+if [ -z "$objectIdString" ]; then
+    echo "Content-type: text/html; charset=utf-8"
+    echo
+    echo "<p class="error">Inga träffar</p>"
+    exit 1
+fi
 
  # Set the IFS variable to a space character
 semesterUrl="https://cloud.timeedit.net/liu/web/schema/ri.html?h=t&sid=3&p=20230801%2C20231231&objects=${objectIdString}"

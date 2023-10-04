@@ -14,6 +14,11 @@ fi
 
 baseUrl="https://cloud.timeedit.net/liu/web/schema"
 
+# 184 Lärare
+# 195 Lokal
+# 205 studentgrupp
+# 212 Undervisningstype
+# 219 Kurs
 # URL to fetch JSON data
 jsonUrl="$baseUrl/objects.json?l=sv_SE&search_text=${course}&types=219&fe=132.0&sid=3&ox=0"
 

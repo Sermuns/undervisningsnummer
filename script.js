@@ -60,7 +60,8 @@ function makeTable () {
     for (const tr of futureTrs) {
       const activity = tr.children[3].textContent.trim()
       const isFirstOccurence = !nextOccurences.has(activity)
-      if (isFirstOccurence) {
+      const isCorrectGroup = getIfContainsGroup(tr, studentGroup)
+      if (isFirstOccurence && isCorrectGroup) {
         let prevSibling = tr.previousElementSibling
         while (prevSibling && prevSibling.classList.contains('clickable2')) {
           prevSibling = prevSibling.previousElementSibling
@@ -135,6 +136,10 @@ function getPresentGroups(tr){
  * Eg. D2.C or D2
  */
 function getIfContainsGroup (tr, group) {
+  if (!group) {
+    // If no group is given, default to true
+    return true
+  }
   const studentGroupElement = tr.children[7]
   const studentGroupsInRow = studentGroupElement.textContent
     .toUpperCase()

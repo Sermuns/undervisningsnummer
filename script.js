@@ -26,6 +26,7 @@ function makeTable () {
   }
   const studentGroup = urlQueries[1].toUpperCase()
 
+
   // Urls will be in the children div of resultDiv
   const nextOccurences = new Map()
   const scheduleUrls = Array.from(resultDiv.children, child =>
@@ -59,7 +60,8 @@ function makeTable () {
     for (const tr of futureTrs) {
       const activity = tr.children[3].textContent.trim()
       const isFirstOccurence = !nextOccurences.has(activity)
-      if (isFirstOccurence) {
+      const isCorrectGroup = getIfContainsGroup(tr, studentGroup)
+      if (isFirstOccurence && isCorrectGroup) {
         let prevSibling = tr.previousElementSibling
         while (prevSibling && prevSibling.classList.contains('clickable2')) {
           prevSibling = prevSibling.previousElementSibling
@@ -116,10 +118,28 @@ function makeTable () {
 }
 
 /**
+ * Get the student groups in the given tr.
+ * @param {*} tr 
+ * @returns 
+ */
+function getPresentGroups(tr){
+  const studentGroupElement = tr.children[7]
+  const studentGroupsInRow = studentGroupElement.textContent
+    .toUpperCase()
+    .trim()
+    .split(' ')
+  return studentGroupsInRow
+}
+
+/**
  * Return true if the given tr contains the given group OR supergroup
  * Eg. D2.C or D2
  */
 function getIfContainsGroup (tr, group) {
+  if (!group) {
+    // If no group is given, default to true
+    return true
+  }
   const studentGroupElement = tr.children[7]
   const studentGroupsInRow = studentGroupElement.textContent
     .toUpperCase()
@@ -140,6 +160,7 @@ function getIfContainsGroup (tr, group) {
  * @returns {Map} - A map of activity names to their counts.
  */
 function getActivityCountMap (tableRowElements, inputGroup) {
+  const presentGroups = new Set();
   const countMap = new Map()
 
   // Increment the count of the given activity
@@ -158,6 +179,7 @@ function getActivityCountMap (tableRowElements, inputGroup) {
     if (inputGroup && !getIfContainsGroup(tr, inputGroup)) {
       continue
     }
+    presentGroups.add(...getPresentGroups(tr))
 
     const previousGroup = previousTr?.children[7]?.textContent ?? ''
     const currentGroup = tr.children[7].textContent
@@ -182,6 +204,7 @@ function getActivityCountMap (tableRowElements, inputGroup) {
     incrementActivity(currentActivity)
     previousTr = tr
   }
+  console.log(presentGroups);
 
   return countMap
 }

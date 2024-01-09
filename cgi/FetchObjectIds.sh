@@ -33,8 +33,8 @@ if [ -z "$objectIdString" ]; then
 fi
 
  # Set the IFS variable to a space character
-semesterUrl="https://cloud.timeedit.net/liu/web/schema/ri.html?h=t&sid=3&p=20230801%2C20231231&objects=${objectIdString}"
-futureUrl="https://cloud.timeedit.net/liu/web/schema/ri.html?h=t&sid=3&p=0.d%2C20231231.x&objects=${objectIdString}"
+semesterUrl="https://cloud.timeedit.net/liu/web/schema/ri.html?h=t&sid=3&p=20240101%2C20241231&objects=${objectIdString}"
+futureUrl="https://cloud.timeedit.net/liu/web/schema/ri.html?h=t&sid=3&p=0.d%2C20241231.x&objects=${objectIdString}"
 
 echo "Content-type: text/html"
 echo

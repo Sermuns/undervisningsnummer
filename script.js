@@ -204,7 +204,6 @@ function getActivityCountMap(tableRowElements, inputGroup) {
     incrementActivity(currentActivity)
     previousTr = tr
   }
-  console.log(presentGroups);
 
   return countMap
 }

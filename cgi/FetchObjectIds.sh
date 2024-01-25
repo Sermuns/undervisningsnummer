@@ -6,15 +6,6 @@ export LANG=sv_SE.UTF-8
 # Extract the course argument from an environment variable
 course="$VAR_course"
 
-# Check if the course code is less than 5 characters long
-if [ ${#course} -lt 5 ]; then
-    # If it is, output an error message in HTML format and exit the script
-    echo "Content-type: text/html; charset=utf-8"
-    echo
-    echo "<p class=\"error\">Kurskod måste bestå av minst 4 karaktärer!</p>"
-    exit 1
-fi
-
 # Base URL for the web service
 baseUrl="https://cloud.timeedit.net/liu/web/schema"
 

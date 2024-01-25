@@ -73,16 +73,8 @@ p.error {
   text-decoration: underline;
 }
 
-#resultDiv {
-  width: 100%;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
 #resultTable {
-  width: 100%;
   border-collapse: collapse;
 }
 
@@ -110,10 +102,8 @@ tr:hover {
   display: none;
 }
 
-#semesterUrlDiv,
-#futureUrlDiv {
-  max-width: 40rem;
-  margin: 1rem;
+button{
+  margin-top:1rem;
 }
 
 #urlButton {
@@ -121,10 +111,45 @@ tr:hover {
   max-width: 50%;
 }
 
-footer {
+#urlsDiv{
+  margin:1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Added this line */
+  gap: 1rem;
+}
+
+.info-box{
   vertical-align: center;
   padding: 0.5rem;
   border: #ccc 1px solid;
   margin-top: 1rem;
   text-align: center;
+}
+
+/* Existing CSS... */
+
+/* Responsive styles */
+@media (max-width: 600px) {
+  #app {
+    width: 95%; /* Use a percentage width for smaller screens */
+    padding: 0.5rem;
+  }
+
+  #history {
+    flex-direction: column; /* Stack history items vertically on small screens */
+  }
+
+  #urlButton {
+    max-width: 100%; /* Allow the button to take up the full width on small screens */
+  }
+
+  button{
+    padding: 1rem;
+  }
+
+  .info-box {
+    padding: 0.2rem;
+  }
 }

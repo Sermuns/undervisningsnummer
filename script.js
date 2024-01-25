@@ -2,8 +2,8 @@
  * Fetch from the urls in the DOM, parse the responses and create a table.
  */
 function makeTable() {
-  // Get the div element with id="resultDiv"
-  const resultDiv = document.getElementById('resultDiv')
+
+  const urlsDiv = document.getElementById('urlsDiv')
 
   // Wait for urls to be added to the DOM
   function waitForChildren() {
@@ -27,9 +27,9 @@ function makeTable() {
   const studentGroup = urlQueries[1].toUpperCase()
 
 
-  // Urls will be in the children div of resultDiv
+  // Get the urls
   const nextOccurences = new Map()
-  const scheduleUrls = Array.from(resultDiv.children, child =>
+  const scheduleUrls = Array.from(urlsDiv.children, child =>
     child.textContent.replace(/\s+/g, ',')
   )
   // if (scheduleUrls.length < 2) {
@@ -112,8 +112,8 @@ function makeTable() {
       table.appendChild(row)
     }
 
-    // Add the table to the beginning of the resultDiv
-    resultDiv.insertBefore(table, resultDiv.firstChild)
+    // Add table to the DOM
+    resultDiv.append(table)
   })
 }
 
@@ -208,16 +208,13 @@ function getActivityCountMap(tableRowElements, inputGroup) {
   return countMap
 }
 
-/**
- * Toggle the visibility of the urls.
- */
-function toggleUrls() {
-  const semesterUrlDiv = document.getElementById('semesterUrlDiv');
-  const futureUrlDiv = document.getElementById('futureUrlDiv');
-
-  if (semesterUrlDiv && futureUrlDiv) {
-    semesterUrlDiv.classList.toggle('hidden');
-    futureUrlDiv.classList.toggle('hidden');
+/** Toggle the class .hidden on all IDs */
+function toggleHiddenIDs(ids){
+  for(const id of ids){
+    const element = document.getElementById(id);
+    if(element){
+      element.classList.toggle('hidden');
+    }
   }
 }
 

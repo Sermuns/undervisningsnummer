@@ -19,37 +19,51 @@
       <a href=".">Undervisningsnummer</a>
     </h1>
     <p class="information">
-      Sök efter en kurskod och studentgrupp för att få fram antalet undervisningstillfällen som har varit och som
-      kommer
-      att vara.
+      Typisk fråga: "Är det föreläsning 10 nu på måndag?"  
+      Istället för att leta upp schemat och räkna ut vilken föreläsning det, använd denna sida.
     </p>
     <form>
       <label for="course">Kurs:</label>
       <input autofocus type="text" name="course" value="&var.course;"
         onfocus="this.setSelectionRange(this.value.length, this.value.length)"
-        oninput="this.value = this.value.toUpperCase()" placeholder="Ex: TATA24">
+        oninput="this.value = this.value.toUpperCase()" placeholder="Ex: TSEA83">
       <label for="group">Grupp:</label>
       <input type="text" name="group" value="&var.group;" oninput="this.value = this.value.toUpperCase()"
         placeholder="Ex: D2.C">
       <label for="history">Historik:</label>
       <div id="history" style="grid-column: 2/3;"></div>
-      <button type="submit" style="grid-column: 1/3;">Sök!</button>
+      <button type="submit" style="grid-column: 1/3;">Sök!&#128269;</button>
     </form>
 
-    <div id="resultDiv">
+    <div id="resultDiv"></div>
+    <if variable-exists=var.course>
+      <button id="urlButton" onclick="toggleHiddenIDs(['semesterUrlDiv', 'futureUrlDiv'])" ;>Visa url:er</button>
+    </if>
+    <div id="urlsDiv">
       <if variable-exists=var.course>
         <cgi script="cgi/FetchObjectIds.sh" course=&var.course;></cgi>
       </if>
     </div>
-    <if variable-exists=var.course>
-      <button id="urlButton" onclick="toggleUrls()">Visa url:er</button>
-    </if>
+    <button id="aboutButton" onclick="toggleHiddenIDs(['more-about'])" ;>Mer om hemsidan</button>
+    <div class="info-box hidden" id="more-about">
+      <h2>Om sidan</h2>
+      <p>
+        Denna sida är till för att underlätta för studenter på Linköpings universitet.
+        Sök efter en kurskod och studentgrupp för att få fram antalet undervisningstillfällen som har varit och som
+        kommer
+        att vara.
+        Skapad av Samuel Åkesson.
+      </p>
+    </div>
   </div>
-  <footer>
-	  <p>Du är besökare nummer <accessed/>
-	  </p>
-	  <p>Sidan modifierades <modified/></p>
-        <a href="https://github.com/Sermuns/undervisningsnummer" target="_blank">Bidra på github!</a>
+  <footer class="info-box">
+    <p>Du är besökare nummer
+      <accessed />
+    </p>
+    <p>Sidan modifierades
+      <modified />
+    </p>
+    <a href="https://github.com/Sermuns/undervisningsnummer" target="_blank">Bidra på github!</a>
   </footer>
 
   <script>

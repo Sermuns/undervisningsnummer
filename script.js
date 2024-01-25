@@ -1,12 +1,12 @@
 /**
  * Fetch from the urls in the DOM, parse the responses and create a table.
  */
-function makeTable () {
+function makeTable() {
   // Get the div element with id="resultDiv"
   const resultDiv = document.getElementById('resultDiv')
 
   // Wait for urls to be added to the DOM
-  function waitForChildren () {
+  function waitForChildren() {
     const semesterUrlDiv = document.getElementById('semesterUrlDiv')
     const futureUrlDiv = document.getElementById('futureUrlDiv')
     if (semesterUrlDiv && futureUrlDiv) {
@@ -32,10 +32,10 @@ function makeTable () {
   const scheduleUrls = Array.from(resultDiv.children, child =>
     child.textContent.replace(/\s+/g, ',')
   )
-  if (scheduleUrls.length < 2) {
-    resultDiv.innerHTML = '<p>Inga träffar</p>'
-    return
-  }
+  // if (scheduleUrls.length < 2) {
+  //   resultDiv.innerHTML = '<p>Inga träffar</p>'
+  //   return
+  // }
   const promises = scheduleUrls.map(url =>
     fetch(url).then(response => response.text())
   ) // Map the URLs to an array of fetch promises
@@ -122,7 +122,7 @@ function makeTable () {
  * @param {*} tr 
  * @returns 
  */
-function getPresentGroups(tr){
+function getPresentGroups(tr) {
   const studentGroupElement = tr.children[7]
   const studentGroupsInRow = studentGroupElement.textContent
     .toUpperCase()
@@ -135,7 +135,7 @@ function getPresentGroups(tr){
  * Return true if the given tr contains the given group OR supergroup
  * Eg. D2.C or D2
  */
-function getIfContainsGroup (tr, group) {
+function getIfContainsGroup(tr, group) {
   if (!group) {
     // If no group is given, default to true
     return true
@@ -159,12 +159,12 @@ function getIfContainsGroup (tr, group) {
  * @param {string} inputGroup - The student group to filter by (optional).
  * @returns {Map} - A map of activity names to their counts.
  */
-function getActivityCountMap (tableRowElements, inputGroup) {
+function getActivityCountMap(tableRowElements, inputGroup) {
   const presentGroups = new Set();
   const countMap = new Map()
 
   // Increment the count of the given activity
-  function incrementActivity (activity) {
+  function incrementActivity(activity) {
     countMap.set(activity, (countMap.get(activity) || 0) + 1)
   }
 
@@ -212,12 +212,17 @@ function getActivityCountMap (tableRowElements, inputGroup) {
 /**
  * Toggle the visibility of the urls.
  */
-function toggleUrls () {
-  document.getElementById('semesterUrlDiv').classList.toggle('hidden')
-  document.getElementById('futureUrlDiv').classList.toggle('hidden')
+function toggleUrls() {
+  const semesterUrlDiv = document.getElementById('semesterUrlDiv');
+  const futureUrlDiv = document.getElementById('futureUrlDiv');
+
+  if (semesterUrlDiv && futureUrlDiv) {
+    semesterUrlDiv.classList.toggle('hidden');
+    futureUrlDiv.classList.toggle('hidden');
+  }
 }
 
-function storeHistory (courseInput, groupInput) {
+function storeHistory(courseInput, groupInput) {
   // If no results were found, don't add the search to the history
   const table = document.querySelector('#resultDiv > table')
 
@@ -256,12 +261,12 @@ function storeHistory (courseInput, groupInput) {
   )
 }
 
-function showHistory (courseInput, groupInput) {
+function showHistory(courseInput, groupInput) {
   const searchHistory = JSON.parse(
     localStorage.getItem('searchHistory') || '[]'
   )
   const historyDiv = document.getElementById('history')
-  if(searchHistory.length === 0){
+  if (searchHistory.length === 0) {
     const historyLabel = document.querySelector('label[for="history"]')
     historyLabel.style.display = 'none'
     historyDiv.style.display = 'none'

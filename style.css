@@ -1,10 +1,23 @@
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: format('woff2'), url('media/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url(media/JetBrainsMono-Bold.woff2) format('woff2');
+  font-weight: bold;
+}
+
 * {
-  font-family: "Lucida Console", Courier, monospace;
+  font-family: JetBrains Mono, monospace;
 }
 
 body {
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #app {
@@ -13,14 +26,15 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 40rem;
+  justify-content: center;
+  max-width: 40rem;
   padding: 0.5rem;
   overflow: hidden;
 }
 
 a {
   text-decoration: underline;
-  color: black;
+  color: yellow;
 }
 
 h1 {
@@ -44,7 +58,7 @@ form {
   margin: 1rem 0;
 }
 
-form > * {
+form>* {
   padding: 0.2rem;
 }
 
@@ -73,24 +87,29 @@ p.error {
   text-decoration: underline;
 }
 
+#resultDiv {
+  width: 100%;
+  overflow: auto;
+}
 
 #resultTable {
   border-collapse: collapse;
+  width: 100%;
 }
 
-#resultTable > tr {
+#resultTable>tr {
   height: 3rem;
 }
 
-#resultTable > tr > th {
+#resultTable>tr>th {
   border: 2px solid #ccc;
 }
 
-#resultTable > tr > td {
+#resultTable>tr>td {
   border: 1px solid #ccc;
 }
 
-#resultTable > tr > * {
+#resultTable>tr>* {
   padding: 0.5rem;
 }
 
@@ -98,12 +117,16 @@ tr:hover {
   background: #cecece;
 }
 
+.bold {
+  font-weight: bold;
+}
+
 .hidden {
   display: none;
 }
 
-button{
-  margin-top:1rem;
+button {
+  margin-top: 1rem;
 }
 
 #urlButton {
@@ -111,16 +134,17 @@ button{
   max-width: 50%;
 }
 
-#urlsDiv{
-  margin:1rem;
+#urlDiv {
+  margin: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Added this line */
+  justify-content: center;
+  /* Added this line */
   gap: 1rem;
 }
 
-.info-box{
+.info-box {
   vertical-align: center;
   padding: 0.5rem;
   border: #ccc 1px solid;
@@ -128,24 +152,25 @@ button{
   text-align: center;
 }
 
-/* Existing CSS... */
-
 /* Responsive styles */
 @media (max-width: 600px) {
   #app {
-    width: 95%; /* Use a percentage width for smaller screens */
+    width: 95%;
+    /* Use a percentage width for smaller screens */
     padding: 0.5rem;
   }
 
   #history {
-    flex-direction: column; /* Stack history items vertically on small screens */
+    flex-direction: column;
+    /* Stack history items vertically on small screens */
   }
 
   #urlButton {
-    max-width: 100%; /* Allow the button to take up the full width on small screens */
+    max-width: 100%;
+    /* Allow the button to take up the full width on small screens */
   }
 
-  button{
+  button {
     padding: 1rem;
   }
 

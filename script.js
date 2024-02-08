@@ -1,22 +1,9 @@
 /**
  * Fetch from the urls in the DOM, parse the responses and create a table.
  */
-function makeTable() {
+async function makeTable() {
 
-  const urlsDiv = document.getElementById('urlsDiv')
-
-  // Wait for urls to be added to the DOM
-  function waitForChildren() {
-    const semesterUrlDiv = document.getElementById('semesterUrlDiv')
-    const futureUrlDiv = document.getElementById('futureUrlDiv')
-    if (semesterUrlDiv && futureUrlDiv) {
-      return true
-    } else {
-      setTimeout(waitForChildren, 100) // Check again in 100 milliseconds
-    }
-  }
-  // Call the checkForChildNodes function to start checking for child nodes
-  waitForChildren()
+  const urlDiv = document.getElementById('urlDiv')
 
   // Extract the value of the "group" parameter
   const urlQueries = window.location.search.match(/group=([^&]*)/)
@@ -26,95 +13,106 @@ function makeTable() {
   }
   const studentGroup = urlQueries[1].toUpperCase()
 
-
   // Get the urls
-  const nextOccurences = new Map()
-  const scheduleUrls = Array.from(urlsDiv.children, child =>
-    child.textContent.replace(/\s+/g, ',')
-  )
-  // if (scheduleUrls.length < 2) {
-  //   resultDiv.innerHTML = '<p>Inga träffar</p>'
-  //   return
-  // }
-  const promises = scheduleUrls.map(url =>
-    fetch(url).then(response => response.text())
-  ) // Map the URLs to an array of fetch promises
-  Promise.all(promises).then(responseTexts => {
-    const parser = new DOMParser()
-    const documents = responseTexts.map(responseText =>
-      parser.parseFromString(responseText, 'text/html')
-    ) // Parse each response text into a Document object
+  const nextOccurencesMap = new Map()
+  const scheduleUrl = urlDiv.children[0].textContent.replace(/\s+/g, ',')
+  const response = await fetch(scheduleUrl)
+  const responseText = await response.text()
 
-    const semesterCountMap = getActivityCountMap(
-      documents[0].querySelectorAll('tr.rr.clickable2'),
-      studentGroup
-    )
+  const parser = new DOMParser()
+  const timeEditDocument = parser.parseFromString(responseText, 'text/html')
 
-    // No results!
-    if (semesterCountMap.size === 0) {
-      return
+  // Loop through the rows in the TimeEdit document, count every occurence of an activity in the semesterCount, and store only the future occurences in futureCount
+  const semesterMap = new Map()
+  const futureMap = new Map()
+  const rows = timeEditDocument.querySelectorAll('tr')
+
+  // const now = new Date(2024, 1, 9, 16, 0)
+  const now = new Date()
+
+  let latestDateString = ''
+
+  for (const tr of rows) {
+    if (tr.childElementCount < 3 || tr.className == 'columnHeaders') continue
+    // Capture the latest date row
+    if (tr.childElementCount == 3) {
+      latestDateString = tr.children[1].textContent.trim(' ')
+      continue
     }
+    // If the row does not contain the student group, skip it
+    if (getIfContainsGroup(tr, studentGroup) == false) {
+      continue
+    }
+    const latestDate = Date.parse(latestDateString.split(' ')[1])
+    // Get attributes from the row
+    const timespan = tr.children[1].textContent.trim()
+    const activity = tr.children[3].textContent.trim()
 
-    const futureTrs = documents[1].querySelectorAll('tr.rr.clickable2')
-    // get the first date
-    for (const tr of futureTrs) {
-      const activity = tr.children[3].textContent.trim()
-      const isFirstOccurence = !nextOccurences.has(activity)
-      const isCorrectGroup = getIfContainsGroup(tr, studentGroup)
-      if (isFirstOccurence && isCorrectGroup) {
-        let prevSibling = tr.previousElementSibling
-        while (prevSibling && prevSibling.classList.contains('clickable2')) {
-          prevSibling = prevSibling.previousElementSibling
-        }
-        const time = tr.children[1].textContent.trim().replace(/\s+/g, '')
-        const day = prevSibling.children[1].textContent
-          .trim()
-          .split(' ')
-          .slice(0, 2)
-          .join(' ')
-        const date = prevSibling ? day + ', ' + time + '' : ''
+    // Create exact startMoment from starttime and latestDate
+    const [startHour, startMinute] = timespan.split(' ')[0].split(':')
+    const startMoment = new Date(latestDate)
+    startMoment.setHours(startHour, startMinute)
 
-        nextOccurences.set(activity, date)
+    // Create exact endMoment from endTime and latestDate
+    const [endHour, endMinute] = timespan.split(' ')[2].split(':')
+    const endMoment = new Date(latestDate)
+    endMoment.setHours(endHour, endMinute)
+
+    // Count the total occurences of the activity
+    semesterMap.set(activity, (semesterMap.get(activity) || 0) + 1)
+
+
+    // If the activity is in the future, count it
+    if (endMoment > now) {
+      futureMap.set(activity, (futureMap.get(activity) || 0) + 1)
+      if (!nextOccurencesMap.has(activity)) {
+        const ongoing = startMoment < now && now < endMoment
+        const formattedLatestDateString = latestDateString.split(' ').slice(0, 2).join(' ')
+        const formattedTimespan = timespan.replace(/\s/g, '')
+        nextOccurencesMap.set(activity, formattedLatestDateString + ', ' + formattedTimespan + (ongoing ? ' (nu)' : ''))
       }
     }
+  }
 
-    const futureCountMap = getActivityCountMap(futureTrs, studentGroup)
+  // Create a table element
+  const table = document.createElement('table')
+  table.id = 'resultTable'
+  const headersRow = document.createElement('tr')
+  headersRow.innerHTML =
+    '<th>Aktivitet</th><th>Tidigare / totalt</th><th>Nästa</th>'
+  table.appendChild(headersRow)
 
-    // Create a table element
-    const table = document.createElement('table')
-    table.id = 'resultTable'
-    const headersRow = document.createElement('tr')
-    headersRow.innerHTML =
-      '<th>Aktivitet</th><th>Tidigare / totalt</th><th>Nästa</th>'
-    table.appendChild(headersRow)
+  // Loop through the futureCountMap and add a row for each key-value pair
+  for (const [activity, count] of semesterMap) {
+    // Create a row element
+    const row = document.createElement('tr')
 
-    // Loop through the futureCountMap and add a row for each key-value pair
-    for (const [course, semesterCount] of semesterCountMap) {
-      // Create a row element
-      const row = document.createElement('tr')
+    // Create a cell element for the key
+    const keyCell = document.createElement('td')
+    keyCell.textContent = activity
+    row.appendChild(keyCell)
 
-      // Create a cell element for the key
-      const keyCell = document.createElement('td')
-      keyCell.textContent = course
-      row.appendChild(keyCell)
+    // Create a cell element for the value
+    const valueCell = document.createElement('td')
+    const passedCount = count - (futureMap.get(activity) || 0)
+    valueCell.textContent = passedCount + '/' + count
+    row.appendChild(valueCell)
 
-      // Create a cell element for the value
-      const valueCell = document.createElement('td')
-      const previousCount = semesterCount - (futureCountMap.get(course) || 0)
-      valueCell.textContent = previousCount + '/' + semesterCount
-      row.appendChild(valueCell)
-
-      const nextCell = document.createElement('td')
-      nextCell.innerHTML = nextOccurences.get(course) || '-'
-      row.appendChild(nextCell)
-
-      // Add the row to the table
-      table.appendChild(row)
+    const nextOccurenceCell = document.createElement('td')
+    const nextOccurenceString = nextOccurencesMap.get(activity).toLocaleString()
+    if (nextOccurenceString.endsWith('(nu)')) {
+      nextOccurenceCell.classList.add('bold')
     }
 
-    // Add table to the DOM
-    resultDiv.append(table)
-  })
+    nextOccurenceCell.innerHTML = nextOccurenceString || '-'
+    row.appendChild(nextOccurenceCell)
+
+    // Add the row to the table
+    table.appendChild(row)
+  }
+
+  // Add table to the DOM
+  resultDiv.append(table)
 }
 
 /**
@@ -151,68 +149,11 @@ function getIfContainsGroup(tr, group) {
   return exactMatch || superGroupMatch
 }
 
-/**
- * Count the occurrences of <UndervisningsTyp> in the given elements
- * for the given student group.
- * e.g. 'Föreläsning' or 'Laboration'.
- * @param {HTMLCollection} tableRowElements - The table row elements to search for activities.
- * @param {string} inputGroup - The student group to filter by (optional).
- * @returns {Map} - A map of activity names to their counts.
- */
-function getActivityCountMap(tableRowElements, inputGroup) {
-  const presentGroups = new Set();
-  const countMap = new Map()
-
-  // Increment the count of the given activity
-  function incrementActivity(activity) {
-    countMap.set(activity, (countMap.get(activity) || 0) + 1)
-  }
-
-  let previousTr = null
-  for (const tr of tableRowElements) {
-    const currentActivity = tr.children[3].textContent.trim()
-    // Skip empty rows
-    if (!currentActivity) {
-      continue
-    }
-    // Skip rows that don't contain the given group
-    if (inputGroup && !getIfContainsGroup(tr, inputGroup)) {
-      continue
-    }
-    presentGroups.add(...getPresentGroups(tr))
-
-    const previousGroup = previousTr?.children[7]?.textContent ?? ''
-    const currentGroup = tr.children[7].textContent
-    const sameGroup = currentGroup === previousGroup
-
-    const previousActivity = previousTr?.children[3]?.textContent.trim() ?? ''
-    const currentTime = tr.children[1].textContent.trim()
-    const previousTime = previousTr?.children[1]?.textContent.trim() ?? ''
-    const sameDay = tr.previousElementSibling === previousTr
-
-    // Skip overlapping activites when group is defined
-    if (
-      inputGroup &&
-      sameDay &&
-      currentTime === previousTime &&
-      currentActivity === previousActivity &&
-      sameGroup
-    ) {
-      continue
-    }
-
-    incrementActivity(currentActivity)
-    previousTr = tr
-  }
-
-  return countMap
-}
-
 /** Toggle the class .hidden on all IDs */
-function toggleHiddenIDs(ids){
-  for(const id of ids){
+function toggleHiddenIDs(ids) {
+  for (const id of ids) {
     const element = document.getElementById(id);
-    if(element){
+    if (element) {
       element.classList.toggle('hidden');
     }
   }
@@ -257,6 +198,9 @@ function storeHistory(courseInput, groupInput) {
   )
 }
 
+/**
+ * Show the search history in the DOM.
+ */
 function showHistory(courseInput, groupInput) {
   const searchHistory = JSON.parse(
     localStorage.getItem('searchHistory') || '[]'
@@ -280,3 +224,20 @@ function showHistory(courseInput, groupInput) {
     historyDiv.appendChild(history)
   })
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  makeTable();
+  const courseInput = document.querySelector('input[name="course"]');
+  const groupInput = document.querySelector('input[name="group"]');
+  showHistory(courseInput, groupInput);
+  const resultDiv = document.querySelector('#resultDiv');
+  const observer = new MutationObserver((mutations) => {
+    if (resultDiv.children.length > 0) {
+      storeHistory(courseInput, groupInput);
+      showHistory(courseInput, groupInput);
+      observer.disconnect();
+    }
+  });
+  observer.observe(resultDiv, { childList: true });
+});

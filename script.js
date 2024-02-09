@@ -1,17 +1,34 @@
+// Global variables
+const now = new Date()
+const urlQueries = getURLQueries()
+var resultDiv
+var urlDiv
+
+/**
+ * Get queries from the URL.
+ * Returns an object with the queries as keys and their values as values.
+ * @returns {Object}
+ */
+function getURLQueries() {
+  const search = window.location.search
+  if (search.length === 0) {
+    return false
+  }
+  const queryStrings = search.substring(1).split('&')
+  const queries = {}
+  for (const queryString of queryStrings) {
+    const [key, value] = queryString.split('=')
+    queries[key] = value
+  }
+  return queries
+}
+
 /**
  * Fetch from the urls in the DOM, parse the responses and create a table.
  */
-async function makeTable() {
+async function generateTable() {
 
-  const urlDiv = document.getElementById('urlDiv')
-
-  // Extract the value of the "group" parameter
-  const urlQueries = window.location.search.match(/group=([^&]*)/)
-  // If the group parameter is not present, return
-  if (!urlQueries) {
-    return
-  }
-  const studentGroup = urlQueries[1].toUpperCase()
+  const studentGroup = urlQueries.group
 
   // Get the urls
   const nextOccurencesMap = new Map()
@@ -27,8 +44,6 @@ async function makeTable() {
   const futureMap = new Map()
   const rows = timeEditDocument.querySelectorAll('tr')
 
-  // const now = new Date(2024, 1, 9, 16, 0)
-  const now = new Date()
 
   let latestDateString = ''
 
@@ -99,8 +114,8 @@ async function makeTable() {
     row.appendChild(valueCell)
 
     const nextOccurenceCell = document.createElement('td')
-    const nextOccurenceString = nextOccurencesMap.get(activity).toLocaleString()
-    if (nextOccurenceString.endsWith('(nu)')) {
+    const nextOccurenceString = nextOccurencesMap.get(activity)
+    if (nextOccurenceString && nextOccurenceString.endsWith('(nu)')) {
       nextOccurenceCell.classList.add('bold')
     }
 
@@ -150,7 +165,7 @@ function getIfContainsGroup(tr, group) {
 }
 
 /** Toggle the class .hidden on all IDs */
-function toggleHiddenIDs(ids) {
+function toggleHiddenOnIDs(ids) {
   for (const id of ids) {
     const element = document.getElementById(id);
     if (element) {
@@ -160,9 +175,9 @@ function toggleHiddenIDs(ids) {
 }
 
 function storeHistory(courseInput, groupInput) {
-  // If no results were found, don't add the search to the history
   const table = document.querySelector('#resultDiv > table')
 
+  // If no results were found, don't add the search to the history
   if (!table) {
     return
   }
@@ -225,13 +240,23 @@ function showHistory(courseInput, groupInput) {
   })
 }
 
-
 document.addEventListener('DOMContentLoaded', () => {
-  makeTable();
+  urlDiv = document.getElementById('urlDiv')
+  resultDiv = document.getElementById('resultDiv')
+
+  if (urlQueries && urlQueries.course.length > 0) {
+    toggleHiddenOnIDs(['urlButton']);
+    // Actual url present
+    if (urlDiv.children[0].textContent.startsWith('https://'))
+      generateTable();
+  }
+
+  // Show stored history
   const courseInput = document.querySelector('input[name="course"]');
   const groupInput = document.querySelector('input[name="group"]');
   showHistory(courseInput, groupInput);
-  const resultDiv = document.querySelector('#resultDiv');
+
+  // Store history (when the table is generated)
   const observer = new MutationObserver((mutations) => {
     if (resultDiv.children.length > 0) {
       storeHistory(courseInput, groupInput);

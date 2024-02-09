@@ -8,7 +8,9 @@
   <link rel="icon" type="image/png" sizes="16x16" href="media/favicon-16x16.png">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="darkmode.css" media="(prefers-color-scheme: dark)">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="description" content="Se antal föreläsningar som varit och kommer att vara för en kurs och grupp på Linköpings universitet.">
   <sscanf variables='var.course, var.group' format="course=%s&group=%s">&page.query;</sscanf>
   <script src="script.js"></script>
 </head>
@@ -35,15 +37,11 @@
     </form>
 
     <div id="resultDiv"></div>
-    <if variable-exists=var.course>
-      <button id="urlButton" onclick="toggleHiddenIDs(['semesterUrlDiv'])" ;>Visa TimeEdit-url</button>
-    </if>
+    <button id="urlButton" onclick="toggleHiddenOnIDs(['semesterUrlDiv'])" ;>Visa TimeEdit-url</button>
     <div id="urlDiv">
-      <if variable-exists=var.course>
-        <cgi script="cgi/FetchObjectIds.sh" course=&var.course;></cgi>
-      </if>
+      <cgi script="cgi/FetchObjectIds.sh" course=&var.course;></cgi>
     </div>
-    <button id="aboutButton" onclick="toggleHiddenIDs(['more-about'])" ;>Om hemsidan</button>
+    <button id="aboutButton" onclick="toggleHiddenOnIDs(['more-about'])" ;>Om hemsidan</button>
     <div class="info-box hidden" id="more-about">
       <h2>Om sidan</h2>
       <p>

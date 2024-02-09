@@ -1,15 +1,22 @@
 #!/bin/bash
 
-# Set the language environment variable to Swedish
-export LANG=sv_SE.UTF-8
-
 # Extract the course argument from an environment variable
 course="$VAR_course"
 
+# Check if the course argument is empty
+if [ -z "$course" ]; then
+    echo "Content-type: text/html; charset=UTF-8"
+    echo
+    echo "<p id="empty-course"></p>"
+    exit 1
+fi
+
 # Check if the length of the course is less than 5
 if [ ${#course} -lt 5 ]; then
-    # Output an error message and exit the script
-    echo "Error: Course code is less than 5 characters."
+    # Output an error message in HTML format and exit the script
+    echo "Content-type: text/html; charset=UTF-8"
+    echo
+    echo "<p id="short-course"></p>"
     exit 1
 fi
 
@@ -31,7 +38,7 @@ if [ -z "$objectIdString" ]; then
     # Output an error message in HTML format and exit the script
     echo "Content-type: text/html; charset=utf-8"
     echo
-    echo "<p class=\"error\">Empty objectIdString..</p>"
+    echo "<p id="no-results"></p>"
     exit 1
 fi
 

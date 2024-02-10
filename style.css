@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'JetBrains Mono';
-  src: format('woff2'), url('media/JetBrainsMono-Regular.woff2') format('woff2');
+  src: url('media/JetBrainsMono-Regular.woff2') format('woff2');
   font-weight: normal;
 }
 
@@ -12,6 +12,7 @@
 
 * {
   font-family: JetBrains Mono, monospace;
+  color: white;
 }
 
 body {
@@ -32,8 +33,24 @@ body {
   overflow: hidden;
 }
 
+.information,
+#app,
+footer {
+  border-color: rgb(62, 68, 70);
+}
+
+button:hover {
+  background-color: #333;
+}
+
+input,
+button {
+  background-color: #2b2a33;
+  border: 1px solid #222;
+}
+
 a {
-  text-decoration: underline;
+  text-decoration: underline yellow;
   color: yellow;
 }
 
@@ -41,6 +58,8 @@ h1 {
   font-size: 1.5rem;
   text-align: center;
   margin-bottom: 0.5rem;
+  color: white;
+  text-decoration-color: white;
 }
 
 .information {
@@ -58,20 +77,41 @@ form {
   margin: 1rem 0;
 }
 
-form>* {
+form>label {
+  text-align: right;
+}
+
+input:focus, select:focus{
+  outline: 1px solid yellow;
+}
+
+form>input, form>select, button {
   padding: 0.2rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: 0;
 }
 
 label {
   font-weight: bold;
 }
 
-#history {
-  padding-bottom: 1rem;
-  overflow: auto;
-  display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
+/* CGI script errors */
+p.error {
+  text-decoration: underline purple;
+}
+
+p.error::before {
+  content: "Fel: ";
+  font-weight: bold;
+}
+
+p#short-course::after {
+  content: "Kurskoden är för kort (minst 5 tecken)";
+}
+
+p#no-results::after {
+  content: "Inga resultat för kurskoden";
 }
 
 /* Make sure the caret is visible only in the input fields */
@@ -81,11 +121,6 @@ button,
 footer,
 a {
   caret-color: transparent;
-}
-
-p.error {
-  color: purple;
-  text-decoration: underline;
 }
 
 #resultDiv {
@@ -113,7 +148,7 @@ p.error {
 }
 
 tr:hover {
-  background: #cecece;
+  background-color: #2b2a33;
 }
 
 .bold {
@@ -126,11 +161,6 @@ tr:hover {
 
 button {
   margin-top: 1rem;
-}
-
-#urlButton {
-  margin-top: 5rem;
-  max-width: 50%;
 }
 
 #urlDiv {
@@ -158,14 +188,8 @@ button {
     padding: 0.5rem;
   }
 
-  #history {
-    flex-direction: column;
-    /* Stack history items vertically on small screens */
-  }
-
-  #urlButton {
-    max-width: 100%;
-    /* Allow the button to take up the full width on small screens */
+  button {
+    width: 100%;
   }
 
   button {

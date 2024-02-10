@@ -1,13 +1,12 @@
 #!/bin/bash
 
-# Extract the course argument from an environment variable
+# Get from environment variable
 course="$VAR_course"
 
 # Check if the course argument is empty
 if [ -z "$course" ]; then
     echo "Content-type: text/html; charset=UTF-8"
     echo
-    echo "<p id="empty-course"></p>"
     exit 1
 fi
 
@@ -16,7 +15,7 @@ if [ ${#course} -lt 5 ]; then
     # Output an error message in HTML format and exit the script
     echo "Content-type: text/html; charset=UTF-8"
     echo
-    echo "<p id="short-course"></p>"
+    echo "<p class="error" id="short-course"></p>"
     exit 1
 fi
 
@@ -38,12 +37,12 @@ if [ -z "$objectIdString" ]; then
     # Output an error message in HTML format and exit the script
     echo "Content-type: text/html; charset=utf-8"
     echo
-    echo "<p id="no-results"></p>"
+    echo "<p class="error" id="no-results"></p>"
     exit 1
 fi
 
 # Construct the URLs for the current semester and future semesters, including the object IDs in the query parameters
-timeEditUrl="https://cloud.timeedit.net/liu/web/schema/ri.html?part=t&sid=3&p=20240101%2C20241231&objects=${objectIdString}"
+timeEditUrl="${baseUrl}/ri.html?part=t&sid=3&p=20240101%2C20241231&objects=${objectIdString}"
 
 # Output the URLs in HTML format and log to a file
 echo "Content-Type: text/html"

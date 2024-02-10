@@ -1,8 +1,10 @@
 // Global variables
 const now = new Date()
-const urlQueries = getURLQueries()
+var urlQueries
 var resultDiv
 var urlDiv
+var courseInput
+var groupInput
 
 /**
  * Get queries from the URL.
@@ -174,7 +176,7 @@ function toggleHiddenOnIDs(ids) {
   }
 }
 
-function storeHistory(courseInput, groupInput) {
+function storeHistory() {
   const table = document.querySelector('#resultDiv > table')
 
   // If no results were found, don't add the search to the history
@@ -216,34 +218,41 @@ function storeHistory(courseInput, groupInput) {
 /**
  * Show the search history in the DOM.
  */
-function showHistory(courseInput, groupInput) {
-  const searchHistory = JSON.parse(
-    localStorage.getItem('searchHistory') || '[]'
-  )
-  const historyDiv = document.getElementById('history')
-  if (searchHistory.length === 0) {
-    const historyLabel = document.querySelector('label[for="history"]')
-    historyLabel.style.display = 'none'
-    historyDiv.style.display = 'none'
-  }
-  historyDiv.innerHTML = ''
-  searchHistory.forEach((search, index) => {
-    const history = document.createElement('a')
-    const groupText = search.group ? `(${search.group})` : ''
+function showHistory() {
+  const searchHistoryItem = localStorage.getItem('searchHistory')
+  // If no search history exists, return
+  if (!searchHistoryItem) return
+
+  const searchHistory = JSON.parse(searchHistoryItem)
+  const selectElement = document.getElementById('history')
+  searchHistory.forEach((search) => {
+    const history = document.createElement('option')
+    const groupText = search.group ? ` (${search.group})` : ''
     history.textContent = `${search.course}` + groupText
-    history.style.cursor = 'pointer' // add pointer cursor on hover
-    history.addEventListener('click', () => {
-      courseInput.value = search.course
-      groupInput.value = search.group
-    })
-    historyDiv.appendChild(history)
+    selectElement.appendChild(history)
   })
 }
 
+/**
+ * Update the input fields with the selected history item.
+ */
+function updateInputs() {
+  const selectElement = document.getElementById('history')
+  const selectedOption = selectElement.options[selectElement.selectedIndex].text
+  const [course, group] = selectedOption.split('(')
+  const courseInput = document.querySelector('input[name="course"]')
+  const groupInput = document.querySelector('input[name="group"]')
+  courseInput.value = course.trim().toUpperCase()
+  groupInput.value = group.slice(0, -1).trim().toUpperCase()
+}
+
+// Main code
 document.addEventListener('DOMContentLoaded', () => {
+  urlQueries = getURLQueries()
   urlDiv = document.getElementById('urlDiv')
   resultDiv = document.getElementById('resultDiv')
-
+  courseInput = document.querySelector('input[name="course"]')
+  groupInput = document.querySelector('input[name="group"]')
   if (urlQueries && urlQueries.course.length > 0) {
     toggleHiddenOnIDs(['urlButton']);
     // Actual url present
@@ -251,18 +260,14 @@ document.addEventListener('DOMContentLoaded', () => {
       generateTable();
   }
 
-  // Show stored history
-  const courseInput = document.querySelector('input[name="course"]');
-  const groupInput = document.querySelector('input[name="group"]');
-  showHistory(courseInput, groupInput);
+  showHistory();
 
   // Store history (when the table is generated)
-  const observer = new MutationObserver((mutations) => {
+  const resultDivObserver = new MutationObserver((mutations) => {
     if (resultDiv.children.length > 0) {
-      storeHistory(courseInput, groupInput);
-      showHistory(courseInput, groupInput);
-      observer.disconnect();
+      storeHistory();
+      resultDivObserver.disconnect();
     }
   });
-  observer.observe(resultDiv, { childList: true });
+  resultDivObserver.observe(resultDiv, { childList: true });
 });

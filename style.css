@@ -98,6 +98,7 @@ label {
 
 /* CGI script errors */
 p.error {
+  text-align:center;
   text-decoration: underline purple;
 }
 
@@ -106,12 +107,16 @@ p.error::before {
   font-weight: bold;
 }
 
+p#group-not-found::after{
+  content: "Gruppen hittades inte.. (exempel kan vara D2.C, EMM1, MAT1, Y2.B";
+}
+
 p#short-course::after {
   content: "Kurskoden är för kort (minst 5 tecken)";
 }
 
 p#no-results::after {
-  content: "Inga resultat för kurskoden";
+  content: "Inga resultat för kurs (går kursen denna termin?)";
 }
 
 /* Make sure the caret is visible only in the input fields */

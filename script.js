@@ -48,8 +48,11 @@ async function generateTable() {
 
 
   let latestDateString = ''
+  let totalNumRows = 0
+  let numGroupRows = 0
 
   for (const tr of rows) {
+    totalNumRows++
     if (tr.childElementCount < 3 || tr.className == 'columnHeaders') continue
     // Capture the latest date row
     if (tr.childElementCount == 3) {
@@ -57,9 +60,9 @@ async function generateTable() {
       continue
     }
     // If the row does not contain the student group, skip it
-    if (getIfContainsGroup(tr, studentGroup) == false) {
-      continue
-    }
+    if (getIfContainsGroup(tr, studentGroup) == false) continue
+   
+    numGroupRows++
     const latestDate = Date.parse(latestDateString.split(' ')[1])
     // Get attributes from the row
     const timespan = tr.children[1].textContent.trim()
@@ -89,6 +92,14 @@ async function generateTable() {
         nextOccurencesMap.set(activity, formattedLatestDateString + ', ' + formattedTimespan + (ongoing ? ' (nu)' : ''))
       }
     }
+  }
+
+  if (numGroupRows == 0) {
+    const errorP = document.createElement('p')
+    errorP.className = 'error'
+    errorP.id = 'group-not-found'
+    resultDiv.appendChild(errorP)
+    return
   }
 
   // Create a table element

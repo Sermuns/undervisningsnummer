@@ -82,6 +82,8 @@ label {
   margin: auto 0;
 }
 
+
+
 input:focus,
 select:focus {
   outline: 1px solid yellow;
@@ -90,7 +92,7 @@ select:focus {
 form>input,
 form>select,
 button {
-  padding: 0.2rem;
+  padding: 0.4rem;
   border: 1px solid #ccc;
   border-radius: 5px;
   outline: 0;

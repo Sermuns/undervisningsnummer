@@ -77,15 +77,19 @@ form {
   margin: 1rem 0;
 }
 
-form>label {
+label {
   text-align: right;
+  margin: auto 0;
 }
 
-input:focus, select:focus{
+input:focus,
+select:focus {
   outline: 1px solid yellow;
 }
 
-form>input, form>select, button {
+form>input,
+form>select,
+button {
   padding: 0.2rem;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -98,7 +102,7 @@ label {
 
 /* CGI script errors */
 p.error {
-  text-align:center;
+  text-align: center;
   text-decoration: underline purple;
 }
 
@@ -107,8 +111,8 @@ p.error::before {
   font-weight: bold;
 }
 
-p#group-not-found::after{
-  content: "Gruppen hittades inte.. (exempel kan vara D2.C, EMM1, MAT1, Y2.B";
+p#group-not-found::after {
+  content: "Gruppen hittades inte (exempel: D2.C, EMM1, MAT1, Y2.B";
 }
 
 p#short-course::after {
@@ -183,6 +187,21 @@ button {
   border: #ccc 1px solid;
   margin-top: 1rem;
   text-align: center;
+  padding: 1rem;
+}
+
+.info-box>h2 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.info-box>p {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+button {
+  padding: 0.5rem;
 }
 
 /* Responsive styles */
@@ -195,9 +214,6 @@ button {
 
   button {
     width: 100%;
-  }
-
-  button {
     padding: 1rem;
   }
 

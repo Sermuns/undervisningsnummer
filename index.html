@@ -7,13 +7,17 @@
   <link rel="icon" type="image/png" sizes="32x32" href="media/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="media/favicon-16x16.png">
   <link rel="stylesheet" href="style.css">
-  <!-- <link rel="stylesheet" href="darkmode.css" media="(prefers-color-scheme: dark)"> -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="description"
     content="Se antal föreläsningar som varit och kommer att vara för en kurs och grupp på Linköpings universitet.">
-  <sscanf variables='var.course, var.group' format="course=%s&group=%s">&page.query;</sscanf>
+  <meta name="keywords"
+    content="un, un.samake.se, samake, LiU, ISY, Linköping, campus, valla, campus valla, lisam, liunet, timeedit, undervisningsnummer, kurs, grupp, Linköpings universitet">
+  <meta name="author" content="Samuel Åkesson">
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow">
   <script src="script.js"></script>
+  <sscanf variables='var.course, var.group' format="course=%s&group=%s">&page.query;</sscanf>
 </head>
 
 <body>
@@ -28,10 +32,10 @@
       <label for="course">Kurs:</label>
       <input type="text" name="course" value="&var.course;"
         onfocus="this.setSelectionRange(this.value.length, this.value.length)"
-        oninput="this.value = this.value.toUpperCase()" placeholder="Ex: TSEA83">
+        oninput="this.value = this.value.toUpperCase()" placeholder="Ex: TSEA83" autocomplete="off">
       <label for="group">Grupp:</label>
       <input type="text" name="group" value="&var.group;" oninput="this.value = this.value.toUpperCase()"
-        placeholder="Ex: D2.C">
+        placeholder="Ex: D2.C" autocomplete="off">
       <label for="history">Historik:</label>
       <select id="history" onchange="updateInputs()">
         <option></option>
@@ -48,7 +52,8 @@
     <div class="info-box hidden" id="more-about">
       <h2>Användning</h2>
       <p>
-        Skriv in kurskoden och gruppnamnet (vilken klass du går i) för att få fram antalet föreläsningar som varit och kommer att vara.
+        Skriv in kurskoden och gruppnamnet (vilken klass du går i) för att få fram antalet föreläsningar som varit och
+        kommer att vara.
       </p>
       <h2>Bakgrund</h2>
       <p>

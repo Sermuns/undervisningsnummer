@@ -17,6 +17,7 @@
   <meta name="robots" content="index, follow">
   <meta name="googlebot" content="index, follow">
   <script src="script.js"></script>
+  <sscanf variables='var.course, var.group' format="course=%s&group=%s">&page.query;</sscanf>
 </head>
 
 <body>
@@ -31,10 +32,10 @@
       <label for="course">Kurs:</label>
       <input type="text" name="course" value="&var.course;"
         onfocus="this.setSelectionRange(this.value.length, this.value.length)"
-        oninput="this.value = this.value.toUpperCase()" placeholder="Ex: TSEA83">
+        oninput="this.value = this.value.toUpperCase()" placeholder="Ex: TSEA83" autocomplete="off">
       <label for="group">Grupp:</label>
       <input type="text" name="group" value="&var.group;" oninput="this.value = this.value.toUpperCase()"
-        placeholder="Ex: D2.C">
+        placeholder="Ex: D2.C" autocomplete="off">
       <label for="history">Historik:</label>
       <select id="history" onchange="updateInputs()">
         <option></option>

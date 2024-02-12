@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Get from environment variable
-course="$VAR_course"
+# Parse the argument $1, which will be in the format "course=XXXXXX&group=XXXXXX"
+# and extract the value of the course parameter
+course=$(echo "$1" | sed -n 's/^course=\([^&]*\).*/\1/p')
 
 # Check if the course argument is empty
 if [ -z "$course" ]; then

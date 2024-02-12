@@ -17,7 +17,6 @@
   <meta name="robots" content="index, follow">
   <meta name="googlebot" content="index, follow">
   <script src="script.js"></script>
-  <sscanf variables='var.course, var.group' format="course=%s&group=%s">&page.query;</sscanf>
 </head>
 
 <body>
@@ -46,7 +45,7 @@
     <div id="resultDiv"></div>
     <button id="urlButton" class="hidden" onclick="toggleHiddenOnIDs(['semesterUrlDiv'])" ;>Visa TimeEdit-url</button>
     <div id="urlDiv">
-      <cgi script="cgi/FetchObjectIds.sh" course=&var.course;></cgi>
+      <cgi script="fetchObjectID.py"></cgi>
     </div>
     <button id="aboutButton" onclick="toggleHiddenOnIDs(['more-about'])" ;>Om hemsidan</button>
     <div class="info-box hidden" id="more-about">

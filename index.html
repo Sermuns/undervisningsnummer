@@ -17,7 +17,6 @@
   <meta name="robots" content="index, follow">
   <meta name="googlebot" content="index, follow">
   <script src="script.js"></script>
-  <sscanf variables='var.course, var.group' format="course=%s&group=%s">&page.query;</sscanf>
 </head>
 
 <body>
@@ -30,12 +29,11 @@
     </p>
     <form>
       <label for="course">Kurs:</label>
-      <input type="text" name="course" value="&var.course;"
-        onfocus="this.setSelectionRange(this.value.length, this.value.length)"
+      <input type="text" name="course" onfocus="this.setSelectionRange(this.value.length, this.value.length)"
         oninput="this.value = this.value.toUpperCase()" placeholder="Ex: TSEA83" autocomplete="off">
       <label for="group">Grupp:</label>
-      <input type="text" name="group" value="&var.group;" oninput="this.value = this.value.toUpperCase()"
-        placeholder="Ex: D2.C" autocomplete="off">
+      <input type="text" name="group" oninput="this.value = this.value.toUpperCase()" placeholder="Ex: D2.C"
+        autocomplete="off">
       <label for="history">Historik:</label>
       <select id="history" onchange="updateInputs()">
         <option></option>
@@ -46,7 +44,7 @@
     <div id="resultDiv"></div>
     <button id="urlButton" class="hidden" onclick="toggleHiddenOnIDs(['semesterUrlDiv'])" ;>Visa TimeEdit-url</button>
     <div id="urlDiv">
-      <cgi script="cgi/FetchObjectIds.sh" course=&var.course;></cgi>
+      <cgi script="fetchObjectID.py"></cgi>
     </div>
     <button id="aboutButton" onclick="toggleHiddenOnIDs(['more-about'])" ;>Om hemsidan</button>
     <div class="info-box hidden" id="more-about">

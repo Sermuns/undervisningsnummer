@@ -251,20 +251,23 @@ function updateInputs() {
   const selectElement = document.getElementById('history')
   const selectedOption = selectElement.options[selectElement.selectedIndex].text
   const [course, group] = selectedOption.split('(')
-  const courseInput = document.querySelector('input[name="course"]')
-  const groupInput = document.querySelector('input[name="group"]')
   courseInput.value = course.trim().toUpperCase()
   groupInput.value = group.slice(0, -1).trim().toUpperCase()
 }
 
 // Main code
 document.addEventListener('DOMContentLoaded', () => {
+
+  // Get stuff
   urlQueries = getURLQueries()
   urlDiv = document.getElementById('urlDiv')
   resultDiv = document.getElementById('resultDiv')
   courseInput = document.querySelector('input[name="course"]')
   groupInput = document.querySelector('input[name="group"]')
+
   if (urlQueries && urlQueries.course.length > 0) {
+    courseInput.value = urlQueries.course.trim().toUpperCase()
+    groupInput.value = urlQueries.group.trim().toUpperCase()
     toggleHiddenOnIDs(['urlButton']);
     // Actual url present
     if (urlDiv.children[0].textContent.startsWith('https://'))

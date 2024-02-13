@@ -1,10 +1,10 @@
 // Global variables
 const now = new Date()
-var urlQueries
-var resultDiv
-var urlDiv
-var courseInput
-var groupInput
+let urlQueries
+let resultDiv
+let urlDiv
+let courseInput
+let groupInput
 
 /**
  * Get queries from the URL.
@@ -52,8 +52,12 @@ async function generateTable() {
   let numGroupRows = 0
 
   for (const tr of rows) {
+
     totalNumRows++
+
+    // Uninteresting rows such as headers
     if (tr.childElementCount < 3 || tr.className == 'columnHeaders') continue
+
     // Capture the latest date row
     if (tr.childElementCount == 3) {
       latestDateString = tr.children[1].textContent.trim(' ')
@@ -89,7 +93,7 @@ async function generateTable() {
         const ongoing = startMoment < now && now < endMoment
         const formattedLatestDateString = latestDateString.split(' ').slice(0, 2).join(' ')
         const formattedTimespan = timespan.replace(/\s/g, '')
-        nextOccurencesMap.set(activity, formattedLatestDateString + ', ' + formattedTimespan + (ongoing ? ' (nu)' : ''))
+        nextOccurencesMap.set(activity, `${formattedLatestDateString}, ${formattedTimespan}${ongoing ? ' (nu)' : ''}`);
       }
     }
   }
@@ -123,7 +127,7 @@ async function generateTable() {
     // Create a cell element for the value
     const valueCell = document.createElement('td')
     const passedCount = count - (futureMap.get(activity) || 0)
-    valueCell.textContent = passedCount + '/' + count
+    valueCell.textContent = `${passedCount}/${count}`;
     row.appendChild(valueCell)
 
     const nextOccurenceCell = document.createElement('td')
@@ -239,7 +243,7 @@ function showHistory() {
   searchHistory.forEach((search) => {
     const history = document.createElement('option')
     const groupText = search.group ? ` (${search.group})` : ''
-    history.textContent = `${search.course}` + groupText
+    history.textContent = `${search.course}${groupText}`;
     selectElement.appendChild(history)
   })
 }

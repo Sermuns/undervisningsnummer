@@ -5,7 +5,7 @@ import os
 import subprocess
 from bs4 import BeautifulSoup
 
-class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
+class UnRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         # Split the path and the query parameters
         path, _, query = self.path.partition("?")
@@ -54,4 +54,4 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 if __name__ == '__main__':
     # Start the server on port 3000
-    http.server.test(HandlerClass=MyHTTPRequestHandler, port=3000)
+    http.server.test(HandlerClass=UnRequestHandler, port=3000)

@@ -6,13 +6,20 @@ import urllib.request
 import json
 import sys
 
+
 # Check if the script was called with an argument
 if len(sys.argv) < 2:
     sys.exit(1)
 
+query = sys.argv[1].split('/')[-1]
+
+# Empty query
+if not query:
+    sys.exit(1)
+
 # Parse the argument, which will be in the format "course=XXXXXX&group=XXXXXX"
 # and extract the value of the course parameter
-course = sys.argv[1].split('=')[1].split('&')[0]
+course = query.split('=')[1].split('&')[0]
 
 # Check if the course argument is empty
 if not course:

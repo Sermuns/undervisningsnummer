@@ -15,7 +15,7 @@ Hemsidans design är rent HTML och CSS. Funktionaliteten i hemsidan åstadkomms 
 ## För att köra lokalt
 
 1. Klona detta repository
-2. Starta skriptet ```run_local_server.sh```, vilket startar en lokal server på port 3000.
+2. Starta skriptet ```run_local_server.py```, vilket startar en lokal server på port 3000.
 3. Gå till [localhost:3000](http://localhost:3000) i din webbläsare för att se hemsidan.
 
 > Skapa gärna en pull request om du vill förbättra hemsidan!

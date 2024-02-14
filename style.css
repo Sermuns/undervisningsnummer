@@ -177,6 +177,10 @@ a {
   padding: 0.5rem;
 }
 
+.bold{
+  font-weight: bold;
+}
+
 .hidden {
   display: none;
 }

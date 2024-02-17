@@ -5,6 +5,42 @@ let resultDiv
 let urlDiv
 let courseInput
 let groupInput
+let loading
+
+function showLoading() {
+  // disable inputs
+  courseInput.disabled = true
+  groupInput.disabled = true
+
+  // start loading animation
+  let lineCount = 0;
+  loading = setInterval(() => {
+    lineCount = (lineCount + 1) % 4;
+    let line = "";
+    switch (lineCount) {
+      case 0:
+        line = "|";
+        break;
+      case 1:
+        line = "/";
+        break;
+      case 2:
+        line = "—";
+        break;
+      case 3:
+        line = "\\";
+        break;
+    }
+    resultDiv.innerHTML = `${line} Vänta lite, söker på TimeEdit ${line}`;
+  }, 200);
+}
+
+function hideLoading() {
+  clearInterval(loading);
+  resultDiv.innerHTML = "";
+  courseInput.disabled = false
+  groupInput.disabled = false
+}
 
 /**
  * Get queries from the URL.
@@ -65,7 +101,7 @@ async function generateTable() {
     }
     // If the row does not contain the student group, skip it
     if (getIfContainsGroup(tr, studentGroup) == false) continue
-   
+
     numGroupRows++
     const latestDate = Date.parse(latestDateString.split(' ')[1])
     // Get attributes from the row
@@ -260,8 +296,7 @@ function updateInputs() {
 }
 
 // Main code
-document.addEventListener('DOMContentLoaded', () => {
-
+window.onload = () => {
   // Get stuff
   urlQueries = getURLQueries()
   urlDiv = document.getElementById('urlDiv')
@@ -275,10 +310,10 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleHiddenOnIDs(['urlButton']);
     // Actual url present
     if (urlDiv.children[0].textContent.startsWith('https://'))
-      generateTable();
+      generateTable()
   }
 
-  showHistory();
+  showHistory()
 
   // Store history (when the table is generated)
   const resultDivObserver = new MutationObserver((mutations) => {
@@ -288,4 +323,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   resultDivObserver.observe(resultDiv, { childList: true });
-});
+};

@@ -24,6 +24,11 @@ def parse_arguments():
     return course
 
 def fetch_json_data(course):
+# 184 Lärare
+# 195 Lokal
+# 205 studentgrupp
+# 212 Undervisningstype
+# 219 Kurs
     json_url = f"{BASE_URL}/objects.json?l=sv_SE&search_text={course}&types=219&fe=132.0&sid=3&ox=0"
 
     try:

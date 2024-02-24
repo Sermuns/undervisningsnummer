@@ -42,6 +42,7 @@ body {
   background: var(--primary-color);
   display: flex;
   flex-direction: column;
+  gap: 1rem;
   align-items: center;
   justify-content: center;
   max-width: 40rem;
@@ -61,7 +62,8 @@ tr:hover {
 }
 
 input,
-button {
+button,
+select {
   background-color: var(--primary-color);
   border: 1px solid var(--background-color);
 }
@@ -72,9 +74,10 @@ a {
 }
 
 h1 {
+  margin: 0;
+  margin-top: 1rem;
   font-size: 1.5rem;
   text-align: center;
-  margin-bottom: 0.5rem;
   color: var(--text-color);
   text-decoration-color: var(--text-color);
 }
@@ -91,12 +94,12 @@ form {
   display: grid;
   grid-template-columns: 1fr 4fr;
   grid-gap: 0.5rem;
-  margin: 1rem 0;
 }
 
 label {
   text-align: right;
   margin: auto 0;
+  font-weight: bold;
 }
 
 input:focus,
@@ -105,21 +108,13 @@ button:focus {
   outline: 1px solid var(--link-color);
 }
 
-form>input,
-form>select,
+form input,
+form select,
 button {
   padding: 0.4rem;
   border: 1px solid var(--tertiary-color);
   border-radius: 5px;
   outline: 0;
-}
-
-select{
-  background-color: var(--primary-color);
-}
-
-label {
-  font-weight: bold;
 }
 
 /* CGI script errors */
@@ -129,12 +124,11 @@ p.error {
 }
 
 p.error::before {
-  content: "Fel: ";
-  font-weight: bold;
+  content: "Fel: "; font-weight: bold;
 }
 
-p#group-not-found::after {
-  content: "Gruppen hittades inte (exempel: D2.C, EMM1, MAT1, Y2.B";
+p#group-or-comment-not-found::after {
+  content: "Inga tillfällen med vald grupp och/eller kommentar hittades";
 }
 
 p#short-course::after {
@@ -145,14 +139,14 @@ p#no-results::after {
   content: "Inga resultat för kurs (går kursen denna termin?)";
 }
 
-/* Make sure the caret is visible only in the input fields */
+/* Make sure the caret is visible only in the input fields
 p,
 label,
 button,
 footer,
 a {
   caret-color: transparent;
-}
+} */
 
 #resultDiv {
   width: 100%;
@@ -178,17 +172,12 @@ a {
   padding: 0.5rem;
 }
 
-.bold{
+.bold {
   font-weight: bold;
 }
 
 .hidden {
   display: none;
-}
-
-button {
-  margin-top: 1rem;
-  background-color: var(--secondary-color);
 }
 
 #urlDiv {
@@ -221,9 +210,10 @@ button {
 
 button {
   padding: 0.5rem;
+  background-color: var(--secondary-color);
 }
 
-#console{
+#console {
   font-size: large;
   background-color: var(--secondary-color);
   padding: 1rem;

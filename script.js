@@ -5,6 +5,7 @@ let resultDiv
 let urlDiv
 let courseInput
 let groupInput
+let commentInput
 let loading
 
 function showLoading() {
@@ -48,17 +49,14 @@ function hideLoading() {
  * @returns {Object}
  */
 function getURLQueries() {
-  const search = window.location.search
-  if (search.length === 0) {
-    return false
-  }
-  const queryStrings = search.substring(1).split('&')
-  const queries = {}
-  for (const queryString of queryStrings) {
-    const [key, value] = queryString.split('=')
-    queries[key] = value
-  }
-  return queries
+  const search = window.location.search;
+
+  if (search.length === 0) return false;
+
+  const queryStrings = new URLSearchParams(search);
+  const queries = Object.fromEntries(queryStrings.entries());
+
+  return queries;
 }
 
 /**
@@ -66,10 +64,11 @@ function getURLQueries() {
  */
 async function generateTable() {
 
+  // Get url queries
   const studentGroup = urlQueries.group
+  const comment = urlQueries.comment
 
   // Get the urls
-  const nextOccurencesMap = new Map()
   const scheduleUrl = urlDiv.children[0].textContent.replace(/\s+/g, ',')
   const response = await fetch(scheduleUrl)
   const responseText = await response.text()
@@ -77,11 +76,12 @@ async function generateTable() {
   const parser = new DOMParser()
   const timeEditDocument = parser.parseFromString(responseText, 'text/html')
 
+
   // Loop through the rows in the TimeEdit document, count every occurence of an activity in the semesterCount, and store only the future occurences in futureCount
   const semesterMap = new Map()
   const futureMap = new Map()
+  const nextOccurencesMap = new Map()
   const rows = timeEditDocument.querySelectorAll('tr')
-
 
   let latestDateString = ''
   let totalNumRows = 0
@@ -101,6 +101,9 @@ async function generateTable() {
     }
     // If the row does not contain the student group, skip it
     if (getIfContainsGroup(tr, studentGroup) == false) continue
+
+    // If the row does not contain the comment, skip it
+    if (comment && tr.textContent.toUpperCase().includes(comment.toUpperCase()) == false) continue
 
     numGroupRows++
     const latestDate = Date.parse(latestDateString.split(' ')[1])
@@ -137,12 +140,16 @@ async function generateTable() {
   if (numGroupRows == 0) {
     const errorP = document.createElement('p')
     errorP.className = 'error'
-    errorP.id = 'group-not-found'
+    errorP.id = 'group-or-comment-not-found'
     resultDiv.appendChild(errorP)
     return
   }
 
-  // Create a table element
+  // Add table to the DOM
+  resultDiv.append(createTable(futureMap, semesterMap, nextOccurencesMap))
+}
+
+function createTable(futureMap, semesterMap, nextOccurencesMap) {
   const table = document.createElement('table')
   table.id = 'resultTable'
   const headersRow = document.createElement('tr')
@@ -178,9 +185,7 @@ async function generateTable() {
     // Add the row to the table
     table.appendChild(row)
   }
-
-  // Add table to the DOM
-  resultDiv.append(table)
+  return table
 }
 
 /**
@@ -217,14 +222,13 @@ function getIfContainsGroup(tr, group) {
   return exactMatch || superGroupMatch
 }
 
-/** Toggle the class .hidden on all IDs */
+/** Toggle the class .hidden on all given IDs */
 function toggleHiddenOnIDs(ids) {
-  for (const id of ids) {
-    const element = document.getElementById(id);
-    if (element) {
-      element.classList.toggle('hidden');
-    }
-  }
+  ids.forEach((id) => {
+    const element = document.getElementById(id)
+    if (!element) return
+    element.classList.toggle('hidden')
+  })
 }
 
 function storeHistory() {
@@ -267,6 +271,18 @@ function storeHistory() {
 }
 
 /**
+ * ONLY FOR DEBUGGING, NEVER USE IN PRODUCTION 
+ * @param {number} ms
+ */
+function busyWait(ms) {
+  const start = Date.now()
+  let now = start
+  while (now - start < ms) {
+    now = Date.now()
+  }
+}
+
+/**
  * Show the search history in the DOM.
  */
 function showHistory() {
@@ -298,20 +314,26 @@ function updateInputs() {
 // Main code
 window.onload = () => {
   // Get stuff
-  urlQueries = getURLQueries()
   urlDiv = document.getElementById('urlDiv')
   resultDiv = document.getElementById('resultDiv')
   courseInput = document.querySelector('input[name="course"]')
   groupInput = document.querySelector('input[name="group"]')
+  commentInput = document.querySelector('input[name="comment"]')
+  urlQueries = getURLQueries()
 
   if (urlQueries && urlQueries.course.length > 0) {
+    showLoading()
     courseInput.value = urlQueries.course.trim().toUpperCase()
     groupInput.value = urlQueries.group.trim().toUpperCase()
+    commentInput.value = urlQueries.comment.trim()
     toggleHiddenOnIDs(['urlButton']);
     // Actual url present
     if (urlDiv.children[0].textContent.startsWith('https://'))
       generateTable()
+
   }
+
+  hideLoading()
 
   showHistory()
 

@@ -1,132 +1,95 @@
 <!DOCTYPE html>
 <html lang="sv">
-  <head>
-    <title>Undervisningsnummer</title>
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="media/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="media/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="media/favicon-16x16.png"
-    />
-    <link rel="stylesheet" href="style.css" />
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-    />
-    <meta
-      name="description"
-      content="Se antal föreläsningar som varit och kommer att vara för en kurs och grupp på Linköpings universitet."
-    />
-    <meta
-      name="keywords"
-      content="un, un.samake.se, samake, LiU, ISY, Linköping, campus, valla, campus valla, lisam, liunet, timeedit, undervisningsnummer, kurs, grupp, Linköpings universitet"
-    />
-    <meta name="author" content="Samuel Åkesson" />
-    <meta name="robots" content="index, follow" />
-    <meta name="googlebot" content="index, follow" />
-    <script src="script.js"></script>
-  </head>
 
-  <body>
-    <div id="app">
-      <a href=".">
-        <h1>Undervisningsnummer</h1>
-      </a>
-      <p class="information">
-        Istället för att manuellt räkna antalet föreläsningar som passerat,
-        använd denna sida för att få fram antalet.
-      </p>
-      <form>
-        <label for="course">Kurs:</label>
-        <input
-          type="text"
-          name="course"
-          onfocus="this.setSelectionRange(this.value.length, this.value.length)"
-          oninput="this.value = this.value.toUpperCase()"
-          placeholder="Ex: TSEA83"
-          autocomplete="off"
-          autofocus
-        />
-        <label for="group">Grupp:</label>
-        <input
-          type="text"
-          name="group"
-          oninput="this.value = this.value.toUpperCase()"
-          placeholder="Ex: D2.C"
-          autocomplete="off"
-        />
-        <label for="comment">Kommentar:</label>
-        <input type="text" name="comment" autocomplete="off" />
-        <label for="history">Historik</label>
-        <select id="history" onchange="updateInputs()">
-          <option></option>
-        </select>
-        <button type="submit" style="grid-column: 1/3">Sök &#128269;</button>
-      </form>
+<head>
+  <title>Undervisningsnummer</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="media/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="media/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="media/favicon-16x16.png" />
+  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="description"
+    content="Se antal föreläsningar som varit och kommer att vara för en kurs och grupp på Linköpings universitet." />
+  <meta name="keywords"
+    content="un, un.samake.se, samake, LiU, ISY, Linköping, campus, valla, campus valla, lisam, liunet, timeedit, undervisningsnummer, kurs, grupp, Linköpings universitet" />
+  <meta name="author" content="Samuel Åkesson" />
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow" />
+  <script src="script.js"></script>
+</head>
 
-      <div id="resultDiv"></div>
-      <button
-        id="urlButton"
-        class="hidden"
-        onclick="toggleHiddenOnIDs(['semesterUrlDiv'])"
-      >
-        Visa TimeEdit-url
-      </button>
-      <div id="urlDiv">
-        <cgi script="fetch_object_id.py"></cgi>
-      </div>
-      <button id="aboutButton" onclick="toggleHiddenOnIDs(['more-about'])">
-        Om hemsidan
-      </button>
-      <div class="info-box hidden" id="more-about">
-        <h2>Användning</h2>
-        <p>
-          Skriv in kurskoden och gruppnamnet (vilken klass du går i) för att få
-          fram antalet föreläsningar som varit och kommer att vara.
-        </p>
-        <h2>Bakgrund</h2>
-        <p>
-          Jag tröttnade på att behöva hålla koll på vilket föreläsningsnummer
-          det var i de olika kurserna, skapade därför denna för alla LiU:s
-          studenter.
-        </p>
+<body>
+  <main>
+    <a href=".">
+      <h1>Undervisningsnummer</h1>
+    </a>
+    <p class="information">
+      Istället för att manuellt räkna antalet föreläsningar som passerat,
+      använd denna sida för att få fram antalet.
+    </p>
+    <form>
+      <label for="course">Kurs:</label>
+      <input type="text" name="course" onfocus="this.setSelectionRange(this.value.length, this.value.length)"
+        oninput="this.value = this.value.toUpperCase()" placeholder="Ex: TSEA83" autocomplete="off" autofocus />
+      <label for="group">Grupp:</label>
+      <input type="text" name="group" oninput="this.value = this.value.toUpperCase()" placeholder="Ex: D2.C"
+        autocomplete="off" />
+      <label for="comment">Kommentar:</label>
+      <input type="text" name="comment" autocomplete="off" />
+      <label for="history">Historik</label>
+      <select id="history" onchange="updateInputs()">
+        <option></option>
+      </select>
+      <button type="submit" style="grid-column: 1/3">Sök &#128269;</button>
+    </form>
 
-        <h2>Teknisk information</h2>
-        <p>
-          Hemsidan använder sig av TimeEdit för att räkna fram antalet
-          förekomster av undervisningstypen.
-        </p>
-        <p style="font-style: italic">Skapad av Samuel Åkesson.</p>
-      </div>
+    <div id="resultDiv"></div>
+    <button id="urlButton" class="hidden" onclick="toggleHiddenOnIDs(['semesterUrlDiv'])">
+      Visa TimeEdit-url
+    </button>
+    <div id="urlDiv">
+      <cgi script="fetch_object_id.py"></cgi>
     </div>
-    <footer class="info-box">
+    <button id="aboutButton" onclick="toggleHiddenOnIDs(['more-about'])">
+      Om hemsidan
+    </button>
+    <div class="info-box hidden" id="more-about">
+      <h2>Användning</h2>
       <p>
-        Kolla även in min andra hemsida
-        <a href="https://ledigt.samake.se" target="_blank">ledigt</a>!
+        Skriv in kurskoden och gruppnamnet (vilken klass du går i) för att få
+        fram antalet föreläsningar som varit och kommer att vara.
       </p>
+      <h2>Bakgrund</h2>
       <p>
-        Du är besökare nummer
-        <accessed />
+        Jag tröttnade på att behöva hålla koll på vilket föreläsningsnummer
+        det var i de olika kurserna, skapade därför denna för alla LiU:s
+        studenter.
       </p>
+
+      <h2>Teknisk information</h2>
       <p>
-        Sidan modifierades
-        <modified />
+        Hemsidan använder sig av TimeEdit för att räkna fram antalet
+        förekomster av undervisningstypen.
       </p>
-      <a href="https://github.com/Sermuns/undervisningsnummer" target="_blank"
-        >Bidra på github!</a
-      >
-    </footer>
-  </body>
+      <p style="font-style: italic">Skapad av Samuel Åkesson.</p>
+    </div>
+  </main>
+  <footer class="info-box">
+    <p>
+      Kolla även in min andra hemsida
+      <a href="https://ledigt.samake.se" target="_blank">ledigt</a>!
+    </p>
+    <p>
+      Du är besökare nummer
+      <accessed />
+    </p>
+    <p>
+      Sidan modifierades
+      <modified />
+    </p>
+    <a href="https://github.com/Sermuns/undervisningsnummer" target="_blank">Bidra på github!</a>
+  </footer>
+</body>
+
 </html>

@@ -150,42 +150,49 @@ async function generateTable() {
 }
 
 function createTable(futureMap, semesterMap, nextOccurencesMap) {
-  const table = document.createElement('table')
-  table.id = 'resultTable'
-  const headersRow = document.createElement('tr')
-  headersRow.innerHTML =
-    '<th>Aktivitet</th><th>Tidigare / totalt</th><th>Nästa</th>'
-  table.appendChild(headersRow)
+  const resultTable = document.createElement('table')
+  resultTable.id = 'resultTable'
+
+  const headers = ['Aktivitet', 'Tidigare / totalt', 'Nästa']
+
+  headers.forEach(headerText => {
+    const header = document.createElement('div')
+    header.classList.add('header')
+    header.textContent = headerText
+    resultTable.appendChild(header)
+  })
+
 
   // Loop through the futureCountMap and add a row for each key-value pair
   for (const [activity, count] of semesterMap) {
-    // Create a row element
-    const row = document.createElement('tr')
+    // create row
+    const row = document.createElement('div')
+    row.className = 'row'
 
-    // Create a cell element for the key
-    const keyCell = document.createElement('td')
+    //cell for key
+    const keyCell = document.createElement('div')
     keyCell.textContent = activity
     row.appendChild(keyCell)
 
-    // Create a cell element for the value
-    const valueCell = document.createElement('td')
+    // cell for value
+    const valueCell = document.createElement('div')
     const passedCount = count - (futureMap.get(activity) || 0)
     valueCell.textContent = `${passedCount}/${count}`;
     row.appendChild(valueCell)
 
-    const nextOccurenceCell = document.createElement('td')
+    // cell for next occurence
+    const nextOccurenceCell = document.createElement('div')
     const nextOccurenceString = nextOccurencesMap.get(activity)
+    // now?
     if (nextOccurenceString && nextOccurenceString.endsWith('(nu)')) {
       nextOccurenceCell.classList.add('bold')
     }
-
-    nextOccurenceCell.innerHTML = nextOccurenceString || '-'
+    nextOccurenceCell.innerHTML = nextOccurenceString || '-' // also handle if not found
     row.appendChild(nextOccurenceCell)
-
-    // Add the row to the table
-    table.appendChild(row)
+    
+    resultTable.appendChild(row)
   }
-  return table
+  return resultTable
 }
 
 /**

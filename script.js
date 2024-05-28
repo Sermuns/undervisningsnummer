@@ -323,9 +323,9 @@ window.onload = () => {
   // Get stuff
   urlDiv = document.getElementById('urlDiv')
   resultDiv = document.getElementById('resultDiv')
-  courseInput = document.querySelector('input[name="course"]')
-  groupInput = document.querySelector('input[name="group"]')
-  commentInput = document.querySelector('input[name="comment"]')
+  courseInput = document.querySelector('input#course_input')
+  groupInput = document.querySelector('input#group_input')
+  commentInput = document.querySelector('input#comment_input')
   urlQueries = getURLQueries()
 
   if (urlQueries && urlQueries.course.length > 0) {

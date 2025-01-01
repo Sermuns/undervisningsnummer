@@ -15,7 +15,7 @@ def parse_arguments():
     query = sys.argv[1].split("/")[-1]
 
     if not query:
-        sys.exit(1)
+        sys.exit(0)
 
     course = query.split("=")[1].split("&")[0]
 

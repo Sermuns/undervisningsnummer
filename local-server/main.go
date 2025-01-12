@@ -26,8 +26,13 @@ func parseHTML(file *os.File, urlPath string) ([]byte, error) {
 		if len(matches) != 2 {
 			return match // couldn't find script? bail..
 		}
-		script := string(matches[1])
-		scriptOutput, err := exec.Command(script, urlPath).Output()
+
+		scriptPath := filepath.Join(
+			filepath.Dir(file.Name()),
+			string(matches[1]),
+		)
+
+		scriptOutput, err := exec.Command(scriptPath, urlPath).Output()
 		if err != nil {
 			log.Printf("Error executing script %s: %v", scriptOutput, err)
 			return match
@@ -46,7 +51,7 @@ func parseHTML(file *os.File, urlPath string) ([]byte, error) {
 }
 
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
-	path := filepath.Join(".", r.URL.Path)
+	path := filepath.Join("../public/", r.URL.Path)
 
 	fileInfo, err := os.Stat(path)
 	if err != nil {
@@ -81,7 +86,9 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	)
 }
 
-const ADDRESS = ":3000"
+const (
+	ADDRESS = ":3000"
+)
 
 func main() {
 	http.HandleFunc("/", defaultHandler)

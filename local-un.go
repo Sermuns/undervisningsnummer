@@ -33,7 +33,13 @@ func parseHTML(file *os.File, urlPath string) ([]byte, error) {
 			return match
 		}
 
-		return scriptOutput
+		headerEndIndex := bytes.Index(scriptOutput, []byte("\n\n"))
+		if headerEndIndex == -1 {
+			log.Printf("Unable to find script output header ending")
+			return match
+		}
+
+		return scriptOutput[headerEndIndex+2:]
 	})
 
 	return replaced, nil
@@ -73,7 +79,6 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 		fileInfo.ModTime(),
 		bytes.NewReader(content),
 	)
-	return
 }
 
 const ADDRESS = ":3000"

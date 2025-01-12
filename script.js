@@ -315,6 +315,7 @@ function updateInputs() {
   const selectedOption = selectElement.options[selectElement.selectedIndex].text
   const [course, group] = selectedOption.split('(')
   courseInput.value = course.trim().toUpperCase()
+  if (!group) return
   groupInput.value = group.slice(0, -1).trim().toUpperCase()
 }
 
